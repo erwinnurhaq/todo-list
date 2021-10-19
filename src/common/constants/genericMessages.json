@@ -1,0 +1,9 @@
+{
+  "GENERIC_ERROR_MESSAGE": "Ops. Error happened. Please contact administrator.",
+  "ACTIVITY_REMOVE_SUCCESS": "Activity berhasil dihapus",
+  "ACTIVITY_REMOVE_FAIL": "Activity gagal dihapus",
+  "TASK_ADD_SUCCESS": "Task berhasil ditambahkan",
+  "TASK_EDIT_SUCCESS": "Task berhasil diedit",
+  "TASK_REMOVE_SUCCESS": "Task berhasil dihapus",
+  "TASK_REMOVE_FAIL": "Task gagal dihapus"
+}

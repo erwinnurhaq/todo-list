@@ -1,0 +1,59 @@
+.task-modal {
+  max-width: 51.875rem;
+}
+
+.task-form {
+  border-radius: 0.75rem;
+
+  .modal-header {
+    padding: 1.25rem 1.875rem 1.125rem 1.875rem;
+    .modal-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+  }
+  .modal-body {
+    padding: 2.4rem 1.875rem 2.4rem 1.875rem;
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .form-control {
+      height: 3.25rem;
+      padding: 0 1.25rem;
+      caret-color: var(--primary);
+    }
+  }
+}
+
+// .delete-modal {
+// }
+
+.delete-form {
+  border-radius: 0.75rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .delete-form__img {
+    width: 10rem;
+    height: 10rem;
+  }
+  .delete-form__message {
+    text-align: center;
+  }
+  .delete-form__buttons {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// .toast-modal {
+// }
+
+.toast-content {
+  border-radius: 0.75rem;
+  padding: 1rem;
+}

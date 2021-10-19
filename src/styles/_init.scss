@@ -1,0 +1,19 @@
+:root,
+html[data-theme='light'] {
+  --primary: #16abf8;
+  --black: #111111;
+  --white: #FFFFFF;
+  --grey-bg: #f4f4f4;
+  --danger: #ed4c5c;
+  --grey-text: #888888;
+  --soft-black: #4a4a4a;
+  --divider: #dee2e6;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--grey-bg);
+}
