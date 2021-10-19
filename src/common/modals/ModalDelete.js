@@ -24,7 +24,7 @@ function ModalDelete({ isShow, isLoading, onClose, onDelete, type, title }) {
 
   return (
     <div
-      className="modal fade"
+      className="modal"
       tabIndex="-1"
       data-bs-backdrop={isLoading ? 'static' : true}
       ref={modalRef}

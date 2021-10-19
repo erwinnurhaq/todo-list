@@ -33,6 +33,7 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
     toggleModal();
     if (isShow && task) {
       setForm({
+        id: task.id,
         priority: task.priority,
         title: task.title,
         is_active: task.is_active,
@@ -42,7 +43,7 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
 
   return (
     <div
-      className="modal fade"
+      className="modal"
       tabIndex="-1"
       data-bs-backdrop={isLoading ? 'static' : true}
       ref={modalRef}

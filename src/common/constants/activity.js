@@ -7,7 +7,7 @@ const POPUP = {
 const PRIORITY = {
   VERYHIGH: 'very-high',
   HIGH: 'high',
-  MEDIUM: 'medium',
+  MEDIUM: 'normal',
   LOW: 'low',
   VERYLOW: 'very-low',
 };
@@ -15,17 +15,18 @@ const PRIORITY = {
 const PRIORITY_LABEL = {
   'very-high': 'Very High',
   high: 'High',
-  medium: 'Medium',
+  normal: 'Medium',
   low: 'Low',
   'very-low': 'Very Low',
 };
 
 const SORT = {
-  NEWEST: 'sort.newest',
-  OLDEST: 'sort.oldest',
-  ASC: 'sort.ascending',
-  DESC: 'sort.descending',
-  NOTDONE: 'sort.not.done',
+  NEWEST: 'Terbaru',
+  OLDEST: 'Terlama',
+  ASC: 'A-Z',
+  DESC: 'Z-A',
+  DONE: 'Selesai',
+  NOTDONE: 'Belum Selesai',
 };
 
 export { POPUP, PRIORITY, PRIORITY_LABEL, SORT };

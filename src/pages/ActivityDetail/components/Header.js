@@ -6,8 +6,9 @@ import { ReactComponent as PlusIcon } from 'assets/icons/icon-plus.svg';
 import { ReactComponent as BackIcon } from 'assets/icons/icon-back.svg';
 import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-h.svg';
 import Button from 'common/components/Button';
+import SortDropdown from 'common/components/SortDropdown';
 
-function Header({ isLoading, title, onAddTask, onEditTitle }) {
+function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
   const history = useHistory();
   const [isEditTitle, setIsEditTitle] = useState(false);
   const titleInput = useRef(null);
@@ -60,6 +61,7 @@ function Header({ isLoading, title, onAddTask, onEditTitle }) {
         </button>
       </div>
       <div className="content-header-wrapper">
+        <SortDropdown value={sort} onChange={setSort} />
         <Button color="primary" onClick={onAddTask} disabled={isLoading}>
           <PlusIcon />
           <p>Tambah</p>
@@ -71,9 +73,14 @@ function Header({ isLoading, title, onAddTask, onEditTitle }) {
 
 Header.propTypes = {
   isLoading: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  sort: PropTypes.string.isRequired,
+  setSort: PropTypes.func.isRequired,
   onAddTask: PropTypes.func.isRequired,
   onEditTitle: PropTypes.func.isRequired,
 };
+Header.defaultProps = {
+  title: 'Activity'
+}
 
 export default Header;

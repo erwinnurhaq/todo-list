@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
+import useActivityState from 'common/hooks/useActivityState';
 import ModalDelete from 'common/modals/ModalDelete';
 import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
@@ -10,20 +10,8 @@ import ActivityCard from './components/ActivityCard';
 
 function Activity() {
   const history = useHistory();
-  const queryClient = useQueryClient();
-  const [selectedActivity, setSelectedActivity] = useState({});
-  const [showedPopup, setShowedPopup] = useState('');
-  const [toastMessage, setToastMessage] = useState('');
-
-  const clearPopup = () => {
-    setShowedPopup('');
-    setSelectedActivity({});
-  };
-  const handlePopup = ({ type, activity, message }) => {
-    if (activity) setSelectedActivity(activity);
-    if (message) setToastMessage(message);
-    setShowedPopup(type);
-  };
+  const qc = useQueryClient();
+  const { selected, showedPopup, toastMessage, clearPopup, handlePopup } = useActivityState();
 
   const { data: activities } = useQuery('activities', fetchActivities, {
     staleTime: 60 * 1000,
@@ -34,24 +22,25 @@ function Activity() {
     onError: () => {
       handlePopup({ type: 'TOAST', message: 'Gagal menambahkan activity baru.' });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('activities');
+    onSuccess: res => {
+      qc.setQueryData('activities', prev => ({ ...prev, data: [res, ...prev.data] }));
       clearPopup();
     },
   });
 
-  const handleDelete = useMutation(() => deleteActivity(selectedActivity.id), {
+  console.log(selected)
+  const handleDelete = useMutation(() => deleteActivity(selected.id), {
     onMutate: async () => {
-      await queryClient.cancelQueries('activities');
-      const previous = queryClient.getQueryData('activities');
-      queryClient.setQueryData('activities', old => ({
-        ...old,
-        data: old.data.filter(item => item.id !== selectedActivity.id)
+      await qc.cancelQueries('activities');
+      const previous = qc.getQueryData('activities');
+      qc.setQueryData('activities', prev => ({
+        ...prev,
+        data: prev.data.filter(item => item.id !== selected.id),
       }));
       return { previous };
     },
     onError: (err, deleted, context) => {
-      queryClient.setQueryData('activities', context.previous);
+      qc.setQueryData('activities', context.previous);
       handlePopup({ type: 'TOAST', message: 'Gagal menghapus activity.' });
     },
     onSuccess: () => {
@@ -69,7 +58,7 @@ function Activity() {
               <ActivityCard
                 activity={activity}
                 onViewDetail={() => history.push(`/detail/${activity.id}`)}
-                onDelete={() => handlePopup({ type: 'DELETE', activity })}
+                onDelete={() => handlePopup({ type: 'DELETE', item: activity })}
               />
             </div>
           ))}
@@ -81,7 +70,7 @@ function Activity() {
         onClose={clearPopup}
         onDelete={handleDelete.mutate}
         type="activity"
-        title={selectedActivity.title}
+        title={selected.title}
       />
     </section>
   );

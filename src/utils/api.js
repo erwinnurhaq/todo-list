@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import Axios from 'axios';
 
 const axios = Axios.create({
@@ -22,15 +21,16 @@ const editActivity = ({ id, title }) =>
 
 const deleteActivity = id => axios.delete(`/activity-groups/${id}`).then(res => res.data);
 
-const fetchDetail = ({ id }) => axios.get(`/activity-groups/${id}`).then(res => res.data);
+const fetchDetail = ({ queryKey }) =>
+  axios.get(`/activity-groups/${queryKey[1]}`).then(res => res.data);
 
 const addTask = ({ activity_group_id, title, priority }) =>
   axios.post(`/todo-items`, { activity_group_id, title, priority }).then(res => res.data);
 
-const editTask = ({ id, title }) =>
-  axios.patch(`/activity-groups/${id}`, { title }).then(res => res.data);
-  
-const deleteTask = id => axios.delete(`/activity-groups/${id}`).then(res => res.data);
+const editTask = ({ id, title, is_active, priority }) =>
+  axios.patch(`/todo-items/${id}`, { title, is_active, priority }).then(res => res.data);
+
+const deleteTask = id => axios.delete(`/todo-items/${id}`).then(res => res.data);
 
 export {
   fetchActivities,
