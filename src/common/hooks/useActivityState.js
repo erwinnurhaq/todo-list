@@ -2,25 +2,25 @@ import { useState } from 'react';
 
 function useActivityState() {
   const [selected, setSelected] = useState({});
-  const [showedPopup, setShowedPopup] = useState('');
-  const [toastMessage, setToastMessage] = useState('');
+  const [modal, setModal] = useState('');
+  const [toast, setToast] = useState('');
 
-  const clearPopup = () => {
-    setShowedPopup('');
+  const clearModal = () => {
+    setModal('');
     setSelected({});
   };
-  const handlePopup = ({ type, item, message }) => {
+  const showModal = (type, item) => {
     if (item) setSelected(item);
-    if (message) setToastMessage(message);
-    setShowedPopup(type);
+    setModal(type);
   };
 
   return {
     selected,
-    showedPopup,
-    toastMessage,
-    clearPopup,
-    handlePopup,
+    modal,
+    showModal,
+    clearModal,
+    toast,
+    setToast,
   };
 }
 

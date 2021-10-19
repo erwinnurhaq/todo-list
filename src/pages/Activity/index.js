@@ -11,7 +11,7 @@ import ActivityCard from './components/ActivityCard';
 function Activity() {
   const history = useHistory();
   const qc = useQueryClient();
-  const { selected, showedPopup, toastMessage, clearPopup, handlePopup } = useActivityState();
+  const { selected, modal, showModal, clearModal, toast, setToast } = useActivityState();
 
   const { data: activities } = useQuery('activities', fetchActivities, {
     staleTime: 60 * 1000,
@@ -20,31 +20,31 @@ function Activity() {
 
   const handleAdd = useMutation(addActivity, {
     onError: () => {
-      handlePopup({ type: 'TOAST', message: 'Gagal menambahkan activity baru.' });
+      setToast('Gagal menambahkan activity baru.');
     },
     onSuccess: res => {
       qc.setQueryData('activities', prev => ({ ...prev, data: [res, ...prev.data] }));
-      clearPopup();
     },
   });
 
-  console.log(selected)
-  const handleDelete = useMutation(() => deleteActivity(selected.id), {
-    onMutate: async () => {
+  const handleDelete = useMutation(deleteActivity, {
+    onMutate: async id => {
       await qc.cancelQueries('activities');
       const previous = qc.getQueryData('activities');
       qc.setQueryData('activities', prev => ({
         ...prev,
-        data: prev.data.filter(item => item.id !== selected.id),
+        data: prev.data.filter(item => item.id !== id),
       }));
       return { previous };
     },
     onError: (err, deleted, context) => {
       qc.setQueryData('activities', context.previous);
-      handlePopup({ type: 'TOAST', message: 'Gagal menghapus activity.' });
+      clearModal();
+      setToast('Gagal menghapus activity.');
     },
     onSuccess: () => {
-      handlePopup({ type: 'TOAST', message: 'Berhasil menghapus activity.' });
+      clearModal();
+      setToast('Berhasil menghapus activity.');
     },
   });
 
@@ -58,17 +58,17 @@ function Activity() {
               <ActivityCard
                 activity={activity}
                 onViewDetail={() => history.push(`/detail/${activity.id}`)}
-                onDelete={() => handlePopup({ type: 'DELETE', item: activity })}
+                onDelete={() => showModal('DELETE', activity)}
               />
             </div>
           ))}
       </div>
-      <ModalToast isShow={showedPopup === 'TOAST'} message={toastMessage} onClose={clearPopup} />
+      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
       <ModalDelete
-        isShow={showedPopup === 'DELETE'}
+        isShow={modal === 'DELETE'}
         isLoading={handleDelete.isLoading}
-        onClose={clearPopup}
-        onDelete={handleDelete.mutate}
+        onClose={clearModal}
+        onDelete={() => handleDelete.mutate(selected.id)}
         type="activity"
         title={selected.title}
       />
