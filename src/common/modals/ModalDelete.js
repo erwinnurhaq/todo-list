@@ -25,6 +25,7 @@ function ModalDelete({ isShow, isLoading, onClose, onDelete, type, title }) {
   return (
     <div
       className="modal"
+      data-cy="modal-delete"
       tabIndex="-1"
       data-bs-backdrop={isLoading ? 'static' : true}
       ref={modalRef}
@@ -37,16 +38,26 @@ function ModalDelete({ isShow, isLoading, onClose, onDelete, type, title }) {
             className="delete-form__img"
             data-cy="modal-delete-icon"
           />
-          <div className="delete-form__message">
+          <div className="delete-form__message" data-cy="modal-delete-title">
             Apakah Anda yakin menghapus {type}
             <br />
-            <b>&quot;{title}&quot;</b>
+            &quot;{title}&quot;
           </div>
           <div className="delete-form__buttons">
-            <Button color="secondary" disabled={isLoading} onClick={handleClose}>
+            <Button
+              color="secondary"
+              disabled={isLoading}
+              onClick={handleClose}
+              data-cy="modal-delete-cancel-button"
+            >
               Batal
             </Button>
-            <Button color="danger" disabled={isLoading} onClick={onDelete}>
+            <Button
+              color="danger"
+              disabled={isLoading}
+              onClick={onDelete}
+              data-cy="modal-delete-confirm-button"
+            >
               {isLoading ? <Spinner /> : <p>Hapus</p>}
             </Button>
           </div>

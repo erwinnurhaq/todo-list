@@ -44,6 +44,7 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
   return (
     <div
       className="modal"
+      data-cy="modal-add"
       tabIndex="-1"
       data-bs-backdrop={isLoading ? 'static' : true}
       ref={modalRef}
@@ -51,22 +52,26 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
       <div className="modal-dialog modal-dialog-centered task-modal">
         <form className="modal-content task-form" onSubmit={handleSave}>
           <div className="modal-header">
-            <h5 className="modal-title">{task ? 'Edit Item' : 'Tambah List Item'}</h5>
+            <h5 data-cy="modal-add-title" className="modal-title">
+              {task ? 'Edit Item' : 'Tambah List Item'}
+            </h5>
             <button
               type="button"
               className="btn-close"
+              data-cy="modal-add-close-button"
               onClick={handleClose}
               disabled={isLoading}
             />
           </div>
           <div className="modal-body">
             <div className="mb-3">
-              <label htmlFor="form-task-name" className="form-label">
+              <label htmlFor="form-task-name" className="form-label" data-cy="modal-add-name-title">
                 NAMA LIST ITEM
               </label>
               <input
                 type="text"
                 className="form-control"
+                data-cy="modal-add-name-input"
                 id="form-task-name"
                 placeholder="Tambahkan nama list item"
                 value={form.title}
@@ -74,14 +79,21 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
                 disabled={isLoading}
               />
             </div>
-            <label className="form-label">PRIORITY</label>
+            <label className="form-label" data-cy="modal-add-priority-title">
+              PRIORITY
+            </label>
             <PriorityDropdown
               value={form.priority}
               onChange={val => setForm({ ...form, priority: val })}
             />
           </div>
           <div className="modal-footer">
-            <Button type="submit" color="primary" disabled={isLoading || form.title.length === 0}>
+            <Button
+              type="submit"
+              color="primary"
+              disabled={isLoading || form.title.length === 0}
+              data-cy="modal-add-save-button"
+            >
               {isLoading ? <Spinner /> : <p>Simpan</p>}
             </Button>
           </div>

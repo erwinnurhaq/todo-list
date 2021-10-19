@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
+import emptyItem from 'assets/images/empty-item.png';
 import sortString from 'utils/sortString';
 import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
 import { SORT } from 'common/constants/activity';
@@ -20,10 +21,7 @@ function ActivityDetail() {
   const [sort, setSort] = useState(SORT.NEWEST);
   const detailDepsKey = ['detail', params.id];
 
-  const { data: detail, isLoading } = useQuery(detailDepsKey, fetchDetail, {
-    staleTime: 60 * 1000,
-    cacheTime: 60 * 1000,
-  });
+  const { data: detail, isLoading } = useQuery(detailDepsKey, fetchDetail);
 
   const handleSort = useCallback(
     (a, b) => {
@@ -53,16 +51,9 @@ function ActivityDetail() {
   ]);
 
   const handleEditTitle = useMutation(editActivity, {
-    onMutate: async ({ title }) => {
-      await qc.cancelQueries(detailDepsKey);
-      const previous = qc.getQueryData(detailDepsKey);
-      qc.setQueryData(detailDepsKey, prev => ({ ...prev, title }));
-      return { previous };
+    onSuccess: () => {
+      qc.invalidateQueries(detailDepsKey);
     },
-    onError: (err, edited, context) => {
-      qc.setQueryData(detailDepsKey, context.previous);
-    },
-    onSuccess: () => {},
   });
 
   const handleAddTask = useMutation(addTask, {
@@ -70,36 +61,22 @@ function ActivityDetail() {
       clearModal();
       setToast('Gagal menambahkan task baru.');
     },
-    onSuccess: res => {
-      qc.setQueryData(detailDepsKey, prev => ({
-        ...prev,
-        todo_items: [{ ...res, is_active: 1 }, ...prev.todo_items],
-      }));
+    onSuccess: () => {
+      qc.invalidateQueries(detailDepsKey);
       clearModal();
       setToast('Berhasil menambahkan task baru.');
     },
   });
 
   const handleEditTask = useMutation(editTask, {
-    onMutate: async ({ id, title, priority, is_active }) => {
-      await qc.cancelQueries(detailDepsKey);
-      const previous = qc.getQueryData(detailDepsKey);
-      qc.setQueryData(detailDepsKey, prev => ({
-        ...prev,
-        todo_items: prev.todo_items.map(item =>
-          item.id !== id ? item : { ...item, title, priority, is_active }
-        ),
-      }));
-      return { previous };
-    },
-    onError: (err, edited, context) => {
-      qc.setQueryData(detailDepsKey, context.previous);
+    onError: () => {
       if (selected.id) {
         clearModal();
         setToast('Gagal edit task.');
       }
     },
     onSuccess: () => {
+      qc.invalidateQueries(detailDepsKey);
       if (selected.id) {
         clearModal();
         setToast('Berhasil edit task.');
@@ -108,21 +85,12 @@ function ActivityDetail() {
   });
 
   const handleDeleteTask = useMutation(deleteTask, {
-    onMutate: async id => {
-      await qc.cancelQueries(detailDepsKey);
-      const previous = qc.getQueryData(detailDepsKey);
-      qc.setQueryData(detailDepsKey, prev => ({
-        ...prev,
-        todo_items: prev.todo_items.filter(item => item.id !== id),
-      }));
-      return { previous };
-    },
-    onError: (err, deleted, context) => {
-      qc.setQueryData(detailDepsKey, context.previous);
+    onError: () => {
       clearModal();
       setToast('Gagal delete task.');
     },
     onSuccess: () => {
+      qc.invalidateQueries(detailDepsKey);
       clearModal();
       setToast('Berhasil delete task.');
     },
@@ -139,17 +107,23 @@ function ActivityDetail() {
         onEditTitle={title => handleEditTitle.mutate({ id: params.id, title })}
       />
       <div className="row activity-row">
-        {data.map(task => (
-          <div key={task.id} className="col-12">
-            <TaskCard
-              key={task.id}
-              task={task}
-              onDone={val => handleEditTask.mutate({ ...task, is_active: val })}
-              onEdit={() => showModal('TASK', task)}
-              onDelete={() => showModal('DELETE', task)}
-            />
+        {data.length === 0 && (
+          <div className="empty-item" data-cy="todo-empty-state">
+            <img src={emptyItem} alt="empty" id="TextEmptyTodo" onClick={() => showModal('TASK')} />
           </div>
-        ))}
+        )}
+        {data.length > 0 &&
+          data.map(task => (
+            <div key={task.id} className="col-12">
+              <TaskCard
+                key={task.id}
+                task={task}
+                onDone={val => handleEditTask.mutate({ ...task, is_active: val })}
+                onEdit={() => showModal('TASK', task)}
+                onDelete={() => showModal('DELETE', task)}
+              />
+            </div>
+          ))}
       </div>
       <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
       <ModalDelete

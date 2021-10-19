@@ -25,8 +25,8 @@ const SORT = {
   OLDEST: 'Terlama',
   ASC: 'A-Z',
   DESC: 'Z-A',
-  DONE: 'Selesai',
   NOTDONE: 'Belum Selesai',
+  DONE: 'Selesai',
 };
 
 export { POPUP, PRIORITY, PRIORITY_LABEL, SORT };

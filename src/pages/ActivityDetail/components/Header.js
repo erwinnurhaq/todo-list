@@ -8,6 +8,7 @@ import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-h.svg';
 import Button from 'common/components/Button';
 import SortDropdown from 'common/components/SortDropdown';
 
+// eslint-disable-next-line no-unused-vars
 function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
   const history = useHistory();
   const [isEditTitle, setIsEditTitle] = useState(false);
@@ -34,7 +35,7 @@ function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
           type="button"
           className="content-header__back-icon"
           onClick={() => history.push('/')}
-          disabled={isLoading}
+          data-cy="todo-back-button"
         >
           <BackIcon />
         </button>
@@ -47,22 +48,23 @@ function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
             onKeyDown={ev => (ev.key === 'Enter' ? handleSaveTitle(ev) : null)}
           />
         ) : (
-          <h1 className="content-header__title" onClick={toggleTitleEdit}>
+          <h1 data-cy="todo-title" className="content-header__title" onClick={toggleTitleEdit}>
             {title}
           </h1>
         )}
         <button
           type="button"
           className="content-header__edit-icon"
+          data-cy="todo-title-edit-button"
           onClick={toggleTitleEdit}
-          disabled={isLoading || isEditTitle}
+          disabled={isEditTitle}
         >
           <EditIcon />
         </button>
       </div>
       <div className="content-header-wrapper">
         <SortDropdown value={sort} onChange={setSort} />
-        <Button color="primary" onClick={onAddTask} disabled={isLoading}>
+        <Button color="primary" onClick={onAddTask} data-cy="todo-add-button">
           <PlusIcon />
           <p>Tambah</p>
         </Button>
@@ -80,7 +82,7 @@ Header.propTypes = {
   onEditTitle: PropTypes.func.isRequired,
 };
 Header.defaultProps = {
-  title: 'Activity'
-}
+  title: 'Activity',
+};
 
 export default Header;

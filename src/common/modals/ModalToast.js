@@ -19,9 +19,12 @@ function ModalToast({ isShow, onClose, message }) {
   }, [isShow]); // eslint-disable-line
 
   return (
-    <div className="modal" tabIndex="-1" ref={modalRef}>
+    <div className="modal" tabIndex="-1" ref={modalRef} data-cy="modal-information">
       <div className="modal-dialog modal-dialog-centered toast-modal" onClick={handleClose}>
-        <div className="modal-content toast-content">{message}</div>
+        <div data-cy="modal-information-icon">o</div>
+        <div data-cy="modal-information-title" className="modal-content toast-content">
+          {message}
+        </div>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-h.svg';
 import Indicator from 'common/components/Indicator';
 
 const TaskCard = ({ task, onDone, onEdit, onDelete }) => (
-  <div className="task-card">
+  <div className="task-card" data-cy="todo-item">
     <div className="task-wrapper">
       <div className="form-check">
         <input
@@ -13,9 +13,10 @@ const TaskCard = ({ task, onDone, onEdit, onDelete }) => (
           type="checkbox"
           checked={task.is_active === 0}
           onChange={ev => onDone(ev.target.checked ? 0 : 1)}
+          data-cy="todo-item-checkbox"
         />
       </div>
-      <Indicator priority={task.priority} />
+      <Indicator priority={task.priority} data-cy="todo-item-priority-indicator" />
       <p data-cy="todo-item-title" className={task.is_active === 0 ? 'todo-done' : ''}>
         {task.title}
       </p>

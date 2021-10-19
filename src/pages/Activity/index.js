@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
+import emptyItem from 'assets/images/empty-item.png';
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
 import useActivityState from 'common/hooks/useActivityState';
 import ModalDelete from 'common/modals/ModalDelete';
@@ -13,36 +14,24 @@ function Activity() {
   const qc = useQueryClient();
   const { selected, modal, showModal, clearModal, toast, setToast } = useActivityState();
 
-  const { data: activities } = useQuery('activities', fetchActivities, {
-    staleTime: 60 * 1000,
-    cacheTime: 60 * 1000,
-  });
+  const { data: activities } = useQuery('activities', fetchActivities);
 
   const handleAdd = useMutation(addActivity, {
     onError: () => {
       setToast('Gagal menambahkan activity baru.');
     },
-    onSuccess: res => {
-      qc.setQueryData('activities', prev => ({ ...prev, data: [res, ...prev.data] }));
+    onSuccess: () => {
+      qc.invalidateQueries('activities');
     },
   });
 
   const handleDelete = useMutation(deleteActivity, {
-    onMutate: async id => {
-      await qc.cancelQueries('activities');
-      const previous = qc.getQueryData('activities');
-      qc.setQueryData('activities', prev => ({
-        ...prev,
-        data: prev.data.filter(item => item.id !== id),
-      }));
-      return { previous };
-    },
-    onError: (err, deleted, context) => {
-      qc.setQueryData('activities', context.previous);
+    onError: () => {
       clearModal();
       setToast('Gagal menghapus activity.');
     },
     onSuccess: () => {
+      qc.invalidateQueries('activities');
       clearModal();
       setToast('Berhasil menghapus activity.');
     },
@@ -52,6 +41,11 @@ function Activity() {
     <section className="container">
       <Header onAddActivity={handleAdd.mutate} />
       <div className="row activity-row">
+        {activities?.data.length === 0 && (
+          <div className="empty-item" data-cy="activity-empty-state">
+            <img src={emptyItem} alt="empty" onClick={handleAdd.mutate} />
+          </div>
+        )}
         {activities?.data.length > 0 &&
           activities.data.map(activity => (
             <div key={activity.id} className="col-3">

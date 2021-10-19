@@ -4,8 +4,10 @@ import Button from 'common/components/Button';
 
 const Header = ({ onAddActivity }) => (
   <div className="content-header">
-    <h1 className="content-header__title">Activity</h1>
-    <Button color="primary" onClick={onAddActivity}>
+    <h1 className="content-header__title" data-cy="activity-title">
+      Activity
+    </h1>
+    <Button color="primary" onClick={onAddActivity} data-cy="activity-add-button">
       <IconPlus />
       <p>Tambah</p>
     </Button>

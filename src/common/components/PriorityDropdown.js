@@ -18,6 +18,7 @@ function PriorityDropdown({ value, onChange }) {
     <div className="dropdown priority-dropdown" ref={dropdownRef}>
       <button
         className="btn btn-secondary dropdown-toggle"
+        data-cy="modal-add-priority-dropdown"
         id="dropdownMenuPriority"
         type="button"
         data-bs-toggle="dropdown"
@@ -31,7 +32,12 @@ function PriorityDropdown({ value, onChange }) {
       <ul className="dropdown-menu" aria-labelledby="dropdownMenuPriority">
         {Object.keys(PRIORITY).map(key => (
           <li key={key}>
-            <button type="button" className="dropdown-item" onClick={() => onChange(PRIORITY[key])}>
+            <button
+              type="button"
+              data-cy="modal-add-priority-item"
+              className="dropdown-item"
+              onClick={() => onChange(PRIORITY[key])}
+            >
               <Indicator priority={PRIORITY[key]} />
               <p>{PRIORITY_LABEL[PRIORITY[key]]}</p>
               {PRIORITY[key] === value && <CheckIcon />}

@@ -21,14 +21,21 @@ function SortDropdown({ value, onChange }) {
         type="button"
         data-bs-toggle="dropdown"
         aria-expanded="false"
+        data-cy="todo-sort-button"
       >
         icon
       </button>
-      <ul className="dropdown-menu" aria-labelledby="dropdownMenuSort">
+      <ul data-cy="sort-parent" className="dropdown-menu" aria-labelledby="dropdownMenuSort">
         {Object.keys(SORT).map(key => (
-          <li key={key}>
-            <button type="button" className="dropdown-item" onClick={() => onChange(SORT[key])}>
-              <p>{SORT[key]}</p>
+          <li key={key} data-cy="sort-selection">
+            <button
+              type="button"
+              className="dropdown-item"
+              onClick={() => onChange(SORT[key])}
+              data-cy={SORT[key] === value && 'sort-selection-selected'}
+            >
+              <div data-cy="sort-selection-icon">o</div>
+              <p data-cy="sort-selection-title">{SORT[key]}</p>
               {SORT[key] === value && <CheckIcon />}
             </button>
           </li>
