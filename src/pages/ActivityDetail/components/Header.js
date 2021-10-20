@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 
 import { ReactComponent as PlusIcon } from 'assets/icons/icon-plus.svg';
 import { ReactComponent as BackIcon } from 'assets/icons/icon-back.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-h.svg';
+import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-1.svg';
 import Button from 'common/components/Button';
 import SortDropdown from 'common/components/SortDropdown';
 
-// eslint-disable-next-line no-unused-vars
-function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
+function Header({ title, sort, setSort, onAddTask, onEditTitle }) {
   const history = useHistory();
   const [isEditTitle, setIsEditTitle] = useState(false);
   const titleInput = useRef(null);
@@ -42,6 +41,7 @@ function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
         {isEditTitle ? (
           <input
             type="text"
+            className="content-header__title-input"
             ref={titleInput}
             defaultValue={title}
             onBlur={handleSaveTitle}
@@ -74,7 +74,6 @@ function Header({ isLoading, title, sort, setSort, onAddTask, onEditTitle }) {
 }
 
 Header.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
   title: PropTypes.string,
   sort: PropTypes.string.isRequired,
   setSort: PropTypes.func.isRequired,

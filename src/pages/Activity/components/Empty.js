@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import emptyItem from 'assets/images/empty-item.webp';
+import emptyItem from 'assets/images/empty-act.webp';
 
 const Empty = ({ onClick }) => (
   <div className="empty-item" data-cy="activity-empty-state">

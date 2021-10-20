@@ -1,0 +1,31 @@
+.sort-dropdown {
+  .dropdown-toggle {
+    background: none;
+    width: 3.375rem;
+    height: 3.375rem;
+    border-radius: 50%;
+    border: 1px solid var(--divider);
+    margin: 0 1.125rem;
+    &::after {
+      display: none;
+    }
+  }
+  .dropdown-menu {
+    border-radius: 0.375rem;
+    li:not(:last-child) {
+      border-bottom: 1px solid var(--divider);
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      height: 3.25rem;
+      svg {
+        width: 1.125rem;
+        height: 1.125rem;
+      }
+      p {
+        margin: 0 1rem;
+      }
+    }
+  }
+}

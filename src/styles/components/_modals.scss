@@ -27,9 +27,6 @@
   }
 }
 
-// .delete-modal {
-// }
-
 .delete-form {
   border-radius: 0.75rem;
   padding: 2rem;
@@ -38,22 +35,38 @@
   align-items: center;
 
   .delete-form__img {
-    width: 10rem;
-    height: 10rem;
+    width: 4rem;
+    height: 4rem;
+    margin: 1rem 0 3rem 0;
   }
   .delete-form__message {
     text-align: center;
+    font-size: 1.123rem;
+    line-height: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 2.875rem;
   }
   .delete-form__buttons {
     display: flex;
     justify-content: center;
+    margin-bottom: 0.625rem;
+    button {
+      margin: 0 0.625rem;
+    }
   }
 }
-
-// .toast-modal {
-// }
 
 .toast-content {
   border-radius: 0.75rem;
   padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  div:first-child {
+    margin: 0 1rem;
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
 }

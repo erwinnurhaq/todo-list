@@ -2,6 +2,9 @@ import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'bootstrap/js/dist/modal';
 
+import { ReactComponent as InfoIcon } from 'assets/icons/icon-info.svg';
+import { ReactComponent as AlertIcon } from 'assets/icons/icon-alert.svg';
+
 function ModalToast({ isShow, onClose, message }) {
   const modalRef = useRef(null);
   const modal = useRef(null);
@@ -21,9 +24,11 @@ function ModalToast({ isShow, onClose, message }) {
   return (
     <div className="modal" tabIndex="-1" ref={modalRef} data-cy="modal-information">
       <div className="modal-dialog modal-dialog-centered toast-modal" onClick={handleClose}>
-        <div data-cy="modal-information-icon">o</div>
-        <div data-cy="modal-information-title" className="modal-content toast-content">
-          {message}
+        <div className="modal-content toast-content">
+          <div data-cy="modal-information-icon">
+            {message.includes('Gagal') ? <AlertIcon /> : <InfoIcon />}
+          </div>
+          <div data-cy="modal-information-title">{message}</div>
         </div>
       </div>
     </div>

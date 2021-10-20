@@ -79,9 +79,8 @@ function Activity() {
         )}
         {data?.length > 0 &&
           data.map(activity => (
-            <Suspense fallback={null}>
+            <Suspense key={activity.id} fallback={null}>
               <ActivityCard
-                key={activity.id}
                 activity={activity}
                 onViewDetail={() => history.push(`/detail/${activity.id}`)}
                 onDelete={() => showModal('DELETE', activity)}

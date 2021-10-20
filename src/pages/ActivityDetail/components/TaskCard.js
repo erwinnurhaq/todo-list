@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { ReactComponent as DeleteIcon } from 'assets/icons/icon-delete.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-h.svg';
+import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-2.svg';
 import Indicator from 'common/components/Indicator';
 
 const TaskCard = ({ task, onDone, onEdit, onDelete }) => (

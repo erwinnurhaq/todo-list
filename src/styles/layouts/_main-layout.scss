@@ -9,9 +9,9 @@ main {
     display: flex;
     align-items: center;
     h2 {
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 700;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
   }
   @media (min-width: 1200px) {
@@ -42,8 +42,21 @@ main {
   .content-header__edit-icon {
     margin-left: 1rem;
   }
+  .content-header__title-input,
   .content-header__title {
     font-size: 2.25rem;
     font-weight: 700;
+    margin: 0;
   }
+  .content-header__title-input {
+    background: none;
+    border: none;
+    outline: none;
+    max-width: 18rem;
+    height: 3.375rem;
+  }
+}
+
+.empty-item {
+  text-align: center;
 }

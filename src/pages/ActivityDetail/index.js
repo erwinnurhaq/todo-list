@@ -140,14 +140,13 @@ function ActivityDetail() {
   return (
     <section className="container">
       <Header
-        isLoading={isLoading}
         title={data?.title}
         sort={sort}
         setSort={setSort}
         onAddTask={() => showModal('TASK')}
         onEditTitle={handleEditTitle}
       />
-      <div className="row activity-row">
+      <div className="row task-row">
         {todos.length === 0 && !isLoading && (
           <Suspense fallback={null}>
             <Empty onClick={() => showModal('TASK')} />
@@ -155,9 +154,8 @@ function ActivityDetail() {
         )}
         {todos.length > 0 &&
           todos.map(task => (
-            <Suspense fallback={null}>
+            <Suspense key={task.id} fallback={null}>
               <TaskCard
-                key={task.id}
                 task={task}
                 onDone={val => handleEditTask({ ...task, is_active: val })}
                 onEdit={() => showModal('TASK', task)}
@@ -173,7 +171,7 @@ function ActivityDetail() {
           isLoading={isLoading}
           onClose={clearModal}
           onDelete={() => handleDeleteTask(selected.id)}
-          type="task"
+          type="list item"
           title={selected.title}
         />
         <ModalTaskForm
