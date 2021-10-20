@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-import emptyItem from 'assets/images/empty-item.png';
+import emptyItem from 'assets/images/empty-item.webp';
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
 import useActivityState from 'common/hooks/useActivityState';
 import ModalDelete from 'common/modals/ModalDelete';

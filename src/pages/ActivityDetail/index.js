@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-import emptyItem from 'assets/images/empty-item.png';
+import emptyItem from 'assets/images/empty-item.webp';
 import sortString from 'utils/sortString';
 import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
 import { SORT } from 'common/constants/activity';
