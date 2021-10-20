@@ -11,7 +11,9 @@
   "rules": {
     // React 17 no need to import React on each component
     "react/jsx-uses-react": "off",
+    "react/jsx-no-bind": "off",
     "react/react-in-jsx-scope": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "no-use-before-define": "off"
   }
 }

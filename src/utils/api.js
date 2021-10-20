@@ -7,22 +7,20 @@ const axios = Axios.create({
     'Content-Type': 'application/json',
   },
 });
-const email = 'simkalastoforka@gmail.com';
+const email = 'enurhaq@gmail.com';
 const encodedEmail = encodeURIComponent(email);
 
 const fetchActivities = () =>
   axios.get(`/activity-groups?email=${encodedEmail}`).then(res => res.data);
 
-const addActivity = ({ title = 'Activity' }) =>
-  axios.post(`/activity-groups`, { title, email }).then(res => res.data);
+const addActivity = title => axios.post(`/activity-groups`, { title, email }).then(res => res.data);
 
-const editActivity = ({ id, title }) =>
+const editActivity = (id, title) =>
   axios.patch(`/activity-groups/${id}`, { title }).then(res => res.data);
 
 const deleteActivity = id => axios.delete(`/activity-groups/${id}`).then(res => res.data);
 
-const fetchDetail = ({ queryKey }) =>
-  axios.get(`/activity-groups/${queryKey[1]}`).then(res => res.data);
+const fetchDetail = id => axios.get(`/activity-groups/${id}`).then(res => res.data);
 
 const addTask = ({ activity_group_id, title, priority }) =>
   axios.post(`/todo-items`, { activity_group_id, title, priority }).then(res => res.data);

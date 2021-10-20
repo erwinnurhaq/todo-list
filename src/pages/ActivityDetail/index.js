@@ -1,27 +1,34 @@
-import { useCallback, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-import emptyItem from 'assets/images/empty-item.webp';
 import sortString from 'utils/sortString';
 import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
 import { SORT } from 'common/constants/activity';
 import useActivityState from 'common/hooks/useActivityState';
-import ModalTaskForm from 'common/modals/ModalTaskForm';
-import ModalDelete from 'common/modals/ModalDelete';
-import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
-import TaskCard from './components/TaskCard';
+
+const ModalTaskForm = lazy(() => import('common/modals/ModalTaskForm'));
+const ModalDelete = lazy(() => import('common/modals/ModalDelete'));
+const ModalToast = lazy(() => import('common/modals/ModalToast'));
+const Empty = lazy(() => import('./components/Empty'));
+const TaskCard = lazy(() => import('./components/TaskCard'));
 
 function ActivityDetail() {
   const params = useParams();
-  const qc = useQueryClient();
 
-  const { selected, modal, showModal, clearModal, toast, setToast } = useActivityState();
   const [sort, setSort] = useState(SORT.NEWEST);
-  const detailDepsKey = ['detail', params.id];
-
-  const { data: detail, isLoading } = useQuery(detailDepsKey, fetchDetail);
+  const {
+    data,
+    setData,
+    isLoading,
+    setIsLoading,
+    selected,
+    modal,
+    showModal,
+    clearModal,
+    toast,
+    setToast,
+  } = useActivityState();
 
   const handleSort = useCallback(
     (a, b) => {
@@ -45,106 +52,138 @@ function ActivityDetail() {
     [sort]
   );
 
-  const data = useMemo(() => (detail ? detail.todo_items.sort(handleSort) : []), [
-    detail,
-    handleSort,
-  ]);
+  const todos = useMemo(() => (data ? data.todo_items.sort(handleSort) : []), [data, handleSort]);
 
-  const handleEditTitle = useMutation(editActivity, {
-    onSuccess: () => {
-      qc.invalidateQueries(detailDepsKey);
-    },
-  });
+  useEffect(() => {
+    getActivityDetail();
+  }, []); // eslint-disable-line
 
-  const handleAddTask = useMutation(addTask, {
-    onError: () => {
-      clearModal();
-      setToast('Gagal menambahkan task baru.');
-    },
-    onSuccess: () => {
-      qc.invalidateQueries(detailDepsKey);
+  async function getActivityDetail() {
+    try {
+      setIsLoading(true);
+      const res = await fetchDetail(params.id);
+      setData(res);
+      setIsLoading(false);
+    } catch {
+      setToast('Gagal mendapatkan detail activity.');
+      setIsLoading(false);
+    }
+  }
+
+  async function handleEditTitle(title) {
+    try {
+      setIsLoading(true);
+      await editActivity(params.id, title);
+      setData(prev => ({ ...prev, title }));
+      setIsLoading(false);
+    } catch {
+      setToast('Gagal mengganti title activity.');
+      setIsLoading(false);
+    }
+  }
+
+  async function handleAddTask({ title, priority }) {
+    try {
+      setIsLoading(true);
+      const res = await addTask({ activity_group_id: params.id, title, priority });
+      setData(prev => ({ ...prev, todo_items: [res, ...prev.todo_items] }));
       clearModal();
       setToast('Berhasil menambahkan task baru.');
-    },
-  });
+      setIsLoading(false);
+    } catch {
+      clearModal();
+      setToast('Gagal menambahkan task baru.');
+      setIsLoading(false);
+    }
+  }
 
-  const handleEditTask = useMutation(editTask, {
-    onError: () => {
-      if (selected.id) {
-        clearModal();
-        setToast('Gagal edit task.');
-      }
-    },
-    onSuccess: () => {
-      qc.invalidateQueries(detailDepsKey);
+  async function handleEditTask(task) {
+    try {
+      setIsLoading(true);
+      await editTask(task);
+      setData(prev => ({
+        ...prev,
+        todo_items: prev.todo_items.map(i => (i.id === task.id ? task : i)),
+      }));
       if (selected.id) {
         clearModal();
         setToast('Berhasil edit task.');
       }
-    },
-  });
+      setIsLoading(false);
+    } catch {
+      if (selected.id) {
+        clearModal();
+        setToast('Gagal edit task.');
+      }
+      setIsLoading(false);
+    }
+  }
 
-  const handleDeleteTask = useMutation(deleteTask, {
-    onError: () => {
-      clearModal();
-      setToast('Gagal delete task.');
-    },
-    onSuccess: () => {
-      qc.invalidateQueries(detailDepsKey);
+  async function handleDeleteTask(id) {
+    try {
+      setIsLoading(true);
+      await deleteTask(id);
+      setData(prev => ({
+        ...prev,
+        todo_items: prev.todo_items.filter(i => i.id !== id),
+      }));
       clearModal();
       setToast('Berhasil delete task.');
-    },
-  });
+      setIsLoading(false);
+    } catch {
+      clearModal();
+      setToast('Gagal delete task.');
+      setIsLoading(false);
+    }
+  }
 
   return (
     <section className="container">
       <Header
         isLoading={isLoading}
-        title={detail?.title}
+        title={data?.title}
         sort={sort}
         setSort={setSort}
         onAddTask={() => showModal('TASK')}
-        onEditTitle={title => handleEditTitle.mutate({ id: params.id, title })}
+        onEditTitle={handleEditTitle}
       />
       <div className="row activity-row">
-        {data.length === 0 && (
-          <div className="empty-item" data-cy="todo-empty-state">
-            <img src={emptyItem} alt="empty" id="TextEmptyTodo" onClick={() => showModal('TASK')} />
-          </div>
+        {todos.length === 0 && !isLoading && (
+          <Suspense fallback={null}>
+            <Empty onClick={() => showModal('TASK')} />
+          </Suspense>
         )}
-        {data.length > 0 &&
-          data.map(task => (
-            <div key={task.id} className="col-12">
+        {todos.length > 0 &&
+          todos.map(task => (
+            <Suspense fallback={null}>
               <TaskCard
                 key={task.id}
                 task={task}
-                onDone={val => handleEditTask.mutate({ ...task, is_active: val })}
+                onDone={val => handleEditTask({ ...task, is_active: val })}
                 onEdit={() => showModal('TASK', task)}
                 onDelete={() => showModal('DELETE', task)}
               />
-            </div>
+            </Suspense>
           ))}
       </div>
-      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
-      <ModalDelete
-        isShow={modal === 'DELETE'}
-        isLoading={handleDeleteTask.isLoading}
-        onClose={clearModal}
-        onDelete={() => handleDeleteTask.mutate(selected.id)}
-        type="task"
-        title={selected.title}
-      />
-      <ModalTaskForm
-        isShow={modal === 'TASK'}
-        isLoading={handleAddTask.isLoading || handleEditTask.isLoading}
-        onClose={clearModal}
-        onSave={task =>
-          selected.id
-            ? handleEditTask.mutate(task)
-            : handleAddTask.mutate({ activity_group_id: params.id, ...task })
-        }
-        task={selected.id ? selected : null}
-      />
+      <Suspense fallback={null}>
+        <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
+        <ModalDelete
+          isShow={modal === 'DELETE'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onDelete={() => handleDeleteTask(selected.id)}
+          type="task"
+          title={selected.title}
+        />
+        <ModalTaskForm
+          isShow={modal === 'TASK'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onSave={task => (selected.id ? handleEditTask(task) : handleAddTask(task))}
+          task={selected.id ? selected : null}
+        />
+      </Suspense>
     </section>
   );
 }

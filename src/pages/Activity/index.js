@@ -1,71 +1,105 @@
+import { lazy, Suspense, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-import emptyItem from 'assets/images/empty-item.webp';
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
 import useActivityState from 'common/hooks/useActivityState';
-import ModalDelete from 'common/modals/ModalDelete';
-import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
-import ActivityCard from './components/ActivityCard';
+
+const ModalDelete = lazy(() => import('common/modals/ModalDelete'));
+const ModalToast = lazy(() => import('common/modals/ModalToast'));
+const ActivityCard = lazy(() => import('./components/ActivityCard'));
+const Empty = lazy(() => import('./components/Empty'));
 
 function Activity() {
   const history = useHistory();
-  const qc = useQueryClient();
-  const { selected, modal, showModal, clearModal, toast, setToast } = useActivityState();
+  const {
+    data,
+    setData,
+    isLoading,
+    setIsLoading,
+    selected,
+    modal,
+    showModal,
+    clearModal,
+    toast,
+    setToast,
+  } = useActivityState();
 
-  const { data: activities } = useQuery('activities', fetchActivities);
+  useEffect(() => {
+    getActivities();
+  }, []); // eslint-disable-line
 
-  const handleAdd = useMutation(addActivity, {
-    onError: () => {
+  async function getActivities() {
+    try {
+      setIsLoading(true);
+      const res = await fetchActivities();
+      setData(res.data);
+      setIsLoading(false);
+    } catch {
+      setToast('Gagal mendapatkan activity.');
+      setIsLoading(false);
+    }
+  }
+
+  async function handleAdd() {
+    try {
+      setIsLoading(true);
+      const res = await addActivity('New Activity');
+      setData(prev => [res, ...prev]);
+      getActivities();
+    } catch {
       setToast('Gagal menambahkan activity baru.');
-    },
-    onSuccess: () => {
-      qc.invalidateQueries('activities');
-    },
-  });
+      setIsLoading(false);
+    }
+  }
 
-  const handleDelete = useMutation(deleteActivity, {
-    onError: () => {
-      clearModal();
-      setToast('Gagal menghapus activity.');
-    },
-    onSuccess: () => {
-      qc.invalidateQueries('activities');
+  async function handleDelete(id) {
+    try {
+      setIsLoading(true);
+      await deleteActivity(id);
+      setData(prev => prev.filter(i => i.id !== id));
       clearModal();
       setToast('Berhasil menghapus activity.');
-    },
-  });
+      getActivities();
+    } catch {
+      clearModal();
+      setToast('Gagal menghapus activity.');
+      setIsLoading(false);
+    }
+  }
 
   return (
     <section className="container">
-      <Header onAddActivity={handleAdd.mutate} />
+      <Header onAddActivity={handleAdd} isLoading={isLoading} />
       <div className="row activity-row">
-        {activities?.data.length === 0 && (
-          <div className="empty-item" data-cy="activity-empty-state">
-            <img src={emptyItem} alt="empty" onClick={handleAdd.mutate} />
-          </div>
+        {data?.length === 0 && !isLoading && (
+          <Suspense fallback={null}>
+            <Empty onClick={handleAdd} />
+          </Suspense>
         )}
-        {activities?.data.length > 0 &&
-          activities.data.map(activity => (
-            <div key={activity.id} className="col-3">
+        {data?.length > 0 &&
+          data.map(activity => (
+            <Suspense fallback={null}>
               <ActivityCard
+                key={activity.id}
                 activity={activity}
                 onViewDetail={() => history.push(`/detail/${activity.id}`)}
                 onDelete={() => showModal('DELETE', activity)}
               />
-            </div>
+            </Suspense>
           ))}
       </div>
-      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
-      <ModalDelete
-        isShow={modal === 'DELETE'}
-        isLoading={handleDelete.isLoading}
-        onClose={clearModal}
-        onDelete={() => handleDelete.mutate(selected.id)}
-        type="activity"
-        title={selected.title}
-      />
+      <Suspense fallback={null}>
+        <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
+        <ModalDelete
+          isShow={modal === 'DELETE'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onDelete={() => handleDelete(selected.id)}
+          type="activity"
+          title={selected.title}
+        />
+      </Suspense>
     </section>
   );
 }
