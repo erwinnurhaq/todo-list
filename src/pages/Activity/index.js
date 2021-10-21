@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
 import useActivityState from 'common/hooks/useActivityState';
+import ModalDelete from 'common/modals/ModalDelete';
+import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
 
-const ModalDelete = lazy(() => import('common/modals/ModalDelete'));
-const ModalToast = lazy(() => import('common/modals/ModalToast'));
 const ActivityCard = lazy(() => import('./components/ActivityCard'));
 const Empty = lazy(() => import('./components/Empty'));
 
@@ -88,17 +88,15 @@ function Activity() {
             </Suspense>
           ))}
       </div>
-      <Suspense fallback={null}>
-        <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
-        <ModalDelete
-          isShow={modal === 'DELETE'}
-          isLoading={isLoading}
-          onClose={clearModal}
-          onDelete={() => handleDelete(selected.id)}
-          type="activity"
-          title={selected.title}
-        />
-      </Suspense>
+      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
+      <ModalDelete
+        isShow={modal === 'DELETE'}
+        isLoading={isLoading}
+        onClose={clearModal}
+        onDelete={() => handleDelete(selected.id)}
+        type="activity"
+        title={selected.title}
+      />
     </section>
   );
 }

@@ -5,11 +5,11 @@ import sortString from 'utils/sortString';
 import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
 import { SORT } from 'common/constants/activity';
 import useActivityState from 'common/hooks/useActivityState';
+import ModalTaskForm from 'common/modals/ModalTaskForm';
+import ModalDelete from 'common/modals/ModalDelete';
+import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
 
-const ModalTaskForm = lazy(() => import('common/modals/ModalTaskForm'));
-const ModalDelete = lazy(() => import('common/modals/ModalDelete'));
-const ModalToast = lazy(() => import('common/modals/ModalToast'));
 const Empty = lazy(() => import('./components/Empty'));
 const TaskCard = lazy(() => import('./components/TaskCard'));
 
@@ -164,24 +164,22 @@ function ActivityDetail() {
             </Suspense>
           ))}
       </div>
-      <Suspense fallback={null}>
-        <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
-        <ModalDelete
-          isShow={modal === 'DELETE'}
-          isLoading={isLoading}
-          onClose={clearModal}
-          onDelete={() => handleDeleteTask(selected.id)}
-          type="list item"
-          title={selected.title}
-        />
-        <ModalTaskForm
-          isShow={modal === 'TASK'}
-          isLoading={isLoading}
-          onClose={clearModal}
-          onSave={task => (selected.id ? handleEditTask(task) : handleAddTask(task))}
-          task={selected.id ? selected : null}
-        />
-      </Suspense>
+      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
+      <ModalDelete
+        isShow={modal === 'DELETE'}
+        isLoading={isLoading}
+        onClose={clearModal}
+        onDelete={() => handleDeleteTask(selected.id)}
+        type="list item"
+        title={selected.title}
+      />
+      <ModalTaskForm
+        isShow={modal === 'TASK'}
+        isLoading={isLoading}
+        onClose={clearModal}
+        onSave={task => (selected.id ? handleEditTask(task) : handleAddTask(task))}
+        task={selected.id ? selected : null}
+      />
     </section>
   );
 }
