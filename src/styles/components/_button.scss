@@ -15,9 +15,11 @@
   }
   &.btn-primary {
     background-color: var(--primary);
+    color: var(--white);
   }
   &.btn-danger {
     background-color: var(--danger);
+    color: var(--white);
   }
   &.btn-secondary {
     background-color: var(--grey-bg);

@@ -27,3 +27,5 @@ build.zip
 .firebaserc
 firebase.json
 .firebase/
+/.vercel
+dist
