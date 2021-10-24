@@ -21,6 +21,7 @@ function Activity() {
     showModal,
     clearModal,
     setToast,
+    resetState,
   } = useContext(Context);
 
   useEffect(() => {
@@ -78,7 +79,10 @@ function Activity() {
             <Suspense key={activity.id} fallback={null}>
               <ActivityCard
                 activity={activity}
-                onViewDetail={() => history.push(`/detail/${activity.id}`)}
+                onViewDetail={() => {
+                  resetState();
+                  history.push(`/detail/${activity.id}`);
+                }}
                 onDelete={() => showModal('DELETE', activity)}
               />
             </Suspense>

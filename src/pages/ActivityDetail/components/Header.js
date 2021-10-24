@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { ReactComponent as PlusIcon } from 'assets/icons/icon-plus.svg';
@@ -8,8 +7,7 @@ import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-1.svg';
 import Button from 'common/components/Button';
 import SortDropdown from 'common/components/SortDropdown';
 
-function Header({ title, sort, setSort, onAddTask, onEditTitle }) {
-  const history = useHistory();
+function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const titleInput = useRef(null);
 
@@ -33,7 +31,7 @@ function Header({ title, sort, setSort, onAddTask, onEditTitle }) {
         <button
           type="button"
           className="content-header__back-icon"
-          onClick={() => history.push('/')}
+          onClick={onBack}
           data-cy="todo-back-button"
         >
           <BackIcon />
@@ -77,6 +75,7 @@ Header.propTypes = {
   title: PropTypes.string,
   sort: PropTypes.string.isRequired,
   setSort: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
   onAddTask: PropTypes.func.isRequired,
   onEditTitle: PropTypes.func.isRequired,
 };

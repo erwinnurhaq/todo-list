@@ -14,6 +14,8 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'reset.state':
+      return initialState;
     case 'set.data':
       return { ...state, data: action.payload };
     case 'set.is.loading':
@@ -34,6 +36,9 @@ function reducer(state, action) {
 function Layout({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  function resetState() {
+    dispatch({ type: 'reset.state' });
+  }
   function setData(data) {
     dispatch({ type: 'set.data', payload: data });
   }
@@ -60,6 +65,7 @@ function Layout({ children }) {
         showModal,
         clearModal,
         setToast,
+        resetState,
       }}
     >
       <header>

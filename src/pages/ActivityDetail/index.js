@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { Context } from 'layouts';
 import sortString from 'utils/sortString';
@@ -14,6 +14,7 @@ const Empty = lazy(() => import('common/components/Empty'));
 
 function ActivityDetail() {
   const params = useParams();
+  const history = useHistory();
 
   const [sort, setSort] = useState(SORT.NEWEST);
   const {
@@ -26,6 +27,7 @@ function ActivityDetail() {
     showModal,
     clearModal,
     setToast,
+    resetState,
   } = useContext(Context);
 
   const handleSort = useCallback(
@@ -134,6 +136,10 @@ function ActivityDetail() {
         title={data?.title}
         sort={sort}
         setSort={setSort}
+        onBack={() => {
+          resetState();
+          history.push('/');
+        }}
         onAddTask={() => showModal('TASK')}
         onEditTitle={handleEditTitle}
       />
