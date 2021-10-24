@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'bootstrap/js/dist/modal';
 
-import alertIcon from 'assets/icons/icon-alert.svg';
+import { ReactComponent as AlertIcon } from 'assets/icons/icon-alert.svg';
 import Button from 'common/components/Button';
 import Spinner from 'common/components/Spinner';
 
@@ -32,12 +32,7 @@ function ModalDelete({ isShow, isLoading, onClose, onDelete, type, title }) {
     >
       <div className="modal-dialog modal-dialog-centered delete-modal">
         <div className="modal-content delete-form">
-          <img
-            src={alertIcon}
-            alt="alert"
-            className="delete-form__img"
-            data-cy="modal-delete-icon"
-          />
+          <AlertIcon className="delete-form__img" data-cy="modal-delete-icon" />
           <div className="delete-form__message" data-cy="modal-delete-title">
             Apakah Anda yakin menghapus {type}
             <br />

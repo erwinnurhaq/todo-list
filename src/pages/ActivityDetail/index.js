@@ -1,13 +1,12 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Context } from 'layouts';
 import sortString from 'utils/sortString';
 import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
 import { SORT } from 'common/constants/activity';
-import useActivityState from 'common/hooks/useActivityState';
 import ModalTaskForm from 'common/modals/ModalTaskForm';
 import ModalDelete from 'common/modals/ModalDelete';
-import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
 
 const Empty = lazy(() => import('./components/Empty'));
@@ -26,9 +25,8 @@ function ActivityDetail() {
     modal,
     showModal,
     clearModal,
-    toast,
     setToast,
-  } = useActivityState();
+  } = useContext(Context);
 
   const handleSort = useCallback(
     (a, b) => {
@@ -52,7 +50,10 @@ function ActivityDetail() {
     [sort]
   );
 
-  const todos = useMemo(() => (data ? data.todo_items.sort(handleSort) : []), [data, handleSort]);
+  const todos = useMemo(() => (data?.todo_items ? data.todo_items.sort(handleSort) : []), [
+    data,
+    handleSort,
+  ]);
 
   useEffect(() => {
     getActivityDetail();
@@ -87,11 +88,9 @@ function ActivityDetail() {
       setIsLoading(true);
       const res = await addTask({ activity_group_id: params.id, title, priority });
       setData(prev => ({ ...prev, todo_items: [res, ...prev.todo_items] }));
-      clearModal();
       setToast('Berhasil menambahkan task baru.');
       setIsLoading(false);
     } catch {
-      clearModal();
       setToast('Gagal menambahkan task baru.');
       setIsLoading(false);
     }
@@ -105,16 +104,10 @@ function ActivityDetail() {
         ...prev,
         todo_items: prev.todo_items.map(i => (i.id === task.id ? task : i)),
       }));
-      if (selected.id) {
-        clearModal();
-        setToast('Berhasil edit task.');
-      }
+      if (selected.id) setToast('Berhasil edit task.');
       setIsLoading(false);
     } catch {
-      if (selected.id) {
-        clearModal();
-        setToast('Gagal edit task.');
-      }
+      if (selected.id) setToast('Gagal edit task.');
       setIsLoading(false);
     }
   }
@@ -127,11 +120,9 @@ function ActivityDetail() {
         ...prev,
         todo_items: prev.todo_items.filter(i => i.id !== id),
       }));
-      clearModal();
       setToast('Berhasil delete task.');
       setIsLoading(false);
     } catch {
-      clearModal();
       setToast('Gagal delete task.');
       setIsLoading(false);
     }
@@ -164,7 +155,6 @@ function ActivityDetail() {
             </Suspense>
           ))}
       </div>
-      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
       <ModalDelete
         isShow={modal === 'DELETE'}
         isLoading={isLoading}

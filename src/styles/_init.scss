@@ -2,7 +2,7 @@
 html[data-theme='light'] {
   --primary: #16abf8;
   --black: #111111;
-  --white: #FFFFFF;
+  --white: #ffffff;
   --grey-bg: #f4f4f4;
   --danger: #ed4c5c;
   --grey-text: #888888;
@@ -16,4 +16,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--grey-bg);
+}
+
+#root {
+  min-height: 100vh;
 }

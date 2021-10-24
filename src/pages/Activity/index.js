@@ -1,10 +1,9 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Context } from 'layouts';
 import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
-import useActivityState from 'common/hooks/useActivityState';
 import ModalDelete from 'common/modals/ModalDelete';
-import ModalToast from 'common/modals/ModalToast';
 import Header from './components/Header';
 
 const ActivityCard = lazy(() => import('./components/ActivityCard'));
@@ -21,9 +20,8 @@ function Activity() {
     modal,
     showModal,
     clearModal,
-    toast,
     setToast,
-  } = useActivityState();
+  } = useContext(Context);
 
   useEffect(() => {
     getActivities();
@@ -58,11 +56,9 @@ function Activity() {
       setIsLoading(true);
       await deleteActivity(id);
       setData(prev => prev.filter(i => i.id !== id));
-      clearModal();
       setToast('Berhasil menghapus activity.');
       getActivities();
     } catch {
-      clearModal();
       setToast('Gagal menghapus activity.');
       setIsLoading(false);
     }
@@ -88,7 +84,6 @@ function Activity() {
             </Suspense>
           ))}
       </div>
-      <ModalToast isShow={!!toast} message={toast} onClose={() => setToast('')} />
       <ModalDelete
         isShow={modal === 'DELETE'}
         isLoading={isLoading}
