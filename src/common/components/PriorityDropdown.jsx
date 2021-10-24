@@ -1,16 +1,16 @@
-import { useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from 'bootstrap/js/dist/dropdown';
 
-import { ReactComponent as CheckIcon } from 'assets/icons/icon-check.svg';
-import { PRIORITY, PRIORITY_LABEL } from 'common/constants/activity';
+import CheckIcon from '../../assets/icons/icon-check.svg';
+import { PRIORITY, PRIORITY_LABEL } from '../constants/activity';
 import Indicator from './Indicator';
 
 function PriorityDropdown({ value, onChange }) {
-  const dropdownRef = useRef(null);
-  const dropdown = useRef(null);
+  const dropdownRef = React.useRef(null);
+  const dropdown = React.useRef(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dropdown.current = new Dropdown(dropdownRef.current);
   }, []); // eslint-disable-line
 

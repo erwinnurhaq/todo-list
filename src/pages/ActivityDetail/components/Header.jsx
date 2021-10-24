@@ -1,15 +1,15 @@
-import { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ReactComponent as PlusIcon } from 'assets/icons/icon-plus.svg';
-import { ReactComponent as BackIcon } from 'assets/icons/icon-back.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-1.svg';
-import Button from 'common/components/Button';
-import SortDropdown from 'common/components/SortDropdown';
+import PlusIcon from '../../../assets/icons/icon-plus.svg';
+import BackIcon from '../../../assets/icons/icon-back.svg';
+import EditIcon from '../../../assets/icons/icon-edit-1.svg';
+import Button from '../../../common/components/Button';
+import SortDropdown from '../../../common/components/SortDropdown';
 
 function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
-  const [isEditTitle, setIsEditTitle] = useState(false);
-  const titleInput = useRef(null);
+  const [isEditTitle, setIsEditTitle] = React.useState(false);
+  const titleInput = React.useRef(null);
 
   const toggleTitleEdit = () => {
     setIsEditTitle(!isEditTitle);
@@ -19,7 +19,7 @@ function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
     toggleTitleEdit();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isEditTitle) {
       titleInput.current.focus();
     }

@@ -1,22 +1,22 @@
-import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-import { Context } from 'layouts';
-import sortString from 'utils/sortString';
-import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
-import { SORT } from 'common/constants/activity';
-import ModalTaskForm from 'common/modals/ModalTaskForm';
-import ModalDelete from 'common/modals/ModalDelete';
+import { Context } from '../../layouts';
+import { fetchDetail, addTask, editTask, deleteTask, editActivity } from '../../utils/api';
+import sortString from '../../utils/sortString';
+import { SORT } from '../../common/constants/activity';
+import ModalTaskForm from '../../common/modals/ModalTaskForm';
+import ModalDelete from '../../common/modals/ModalDelete';
 import Header from './components/Header';
 
-const TaskCard = lazy(() => import('./components/TaskCard'));
-const Empty = lazy(() => import('common/components/Empty'));
+const Empty = React.lazy(() => import('../../common/components/Empty'));
+const TaskCard = React.lazy(() => import('./components/TaskCard'));
 
 function ActivityDetail() {
   const params = useParams();
   const history = useHistory();
 
-  const [sort, setSort] = useState(SORT.NEWEST);
+  const [sort, setSort] = React.useState(SORT.NEWEST);
   const {
     data,
     setData,
@@ -28,9 +28,9 @@ function ActivityDetail() {
     clearModal,
     setToast,
     resetState,
-  } = useContext(Context);
+  } = React.useContext(Context);
 
-  const handleSort = useCallback(
+  const handleSort = React.useCallback(
     (a, b) => {
       switch (sort) {
         case SORT.NEWEST:
@@ -52,12 +52,12 @@ function ActivityDetail() {
     [sort]
   );
 
-  const todos = useMemo(() => (data?.todo_items ? data.todo_items.sort(handleSort) : []), [
+  const todos = React.useMemo(() => (data?.todo_items ? data.todo_items.sort(handleSort) : []), [
     data,
     handleSort,
   ]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     getActivityDetail();
   }, []); // eslint-disable-line
 
@@ -145,20 +145,20 @@ function ActivityDetail() {
       />
       <div className="row task-row">
         {todos.length === 0 && !isLoading && (
-          <Suspense fallback={null}>
+          <React.Suspense fallback={null}>
             <Empty type="list item" onClick={() => showModal('TASK')} data-cy="todo-empty-state" />
-          </Suspense>
+          </React.Suspense>
         )}
         {todos.length > 0 &&
           todos.map(task => (
-            <Suspense key={task.id} fallback={null}>
+            <React.Suspense key={task.id} fallback={null}>
               <TaskCard
                 task={task}
                 onDone={val => handleEditTask({ ...task, is_active: val })}
                 onEdit={() => showModal('TASK', task)}
                 onDelete={() => showModal('DELETE', task)}
               />
-            </Suspense>
+            </React.Suspense>
           ))}
       </div>
       <ModalDelete

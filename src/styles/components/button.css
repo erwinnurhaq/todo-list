@@ -1,0 +1,26 @@
+.common-button {
+  height: 3.375rem;
+  min-width: 9.375rem;
+  border-radius: 1.6875rem;
+  border: 0px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+}
+.common-button p {
+  margin: 0;
+  padding: 0 0.4rem;
+}
+.common-button.btn-primary {
+  background-color: var(--primary);
+}
+.common-button.btn-danger {
+  background-color: var(--danger);
+}
+.common-button.btn-secondary {
+  background-color: var(--grey-bg);
+  color: var(--soft-black);
+}

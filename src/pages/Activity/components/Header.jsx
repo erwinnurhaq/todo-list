@@ -1,6 +1,7 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import { ReactComponent as IconPlus } from 'assets/icons/icon-plus.svg';
-import Button from 'common/components/Button';
+import IconPlus from '../../../assets/icons/icon-plus.svg';
+import Button from '../../../common/components/Button';
 
 const Header = ({ onAddActivity, isLoading }) => (
   <div className="content-header">

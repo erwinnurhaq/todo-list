@@ -1,0 +1,21 @@
+.priority-indicator {
+  height: 0.875rem;
+  width: 0.875rem;
+  border-radius: 50%;
+  margin: 0 0.25rem;
+}
+.priority-indicator.very-high {
+  background-color: #ed4c5c;
+}
+.priority-indicator.high {
+  background-color: #f8a541;
+}
+.priority-indicator.normal {
+  background-color: #00a790;
+}
+.priority-indicator.low {
+  background-color: #428bc1;
+}
+.priority-indicator.very-low {
+  background-color: #8942c1;
+}

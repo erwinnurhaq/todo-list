@@ -1,24 +1,24 @@
-import { useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'bootstrap/js/dist/modal';
 
-import { ReactComponent as AlertIcon } from 'assets/icons/icon-alert.svg';
-import Button from 'common/components/Button';
-import Spinner from 'common/components/Spinner';
+import AlertIcon from '../../assets/icons/icon-alert.svg';
+import Button from '../components/Button';
+import Spinner from '../components/Spinner';
 
 function ModalDelete({ isShow, isLoading, onClose, onDelete, type, title }) {
-  const modalRef = useRef(null);
-  const modal = useRef(null);
+  const modalRef = React.useRef(null);
+  const modal = React.useRef(null);
 
   const toggleModal = () => (isShow ? modal.current.show() : modal.current.hide());
   const handleClose = () => modal.current.hide();
 
-  useEffect(() => {
+  React.useEffect(() => {
     modal.current = new Modal(modalRef.current);
     modalRef.current.addEventListener('hide.bs.modal', onClose);
   }, []); // eslint-disable-line
 
-  useEffect(() => {
+  React.useEffect(() => {
     toggleModal();
   }, [isShow]); // eslint-disable-line
 

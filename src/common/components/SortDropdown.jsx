@@ -1,19 +1,19 @@
-import { useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from 'bootstrap/js/dist/dropdown';
 
-import { ReactComponent as SortNewestIcon } from 'assets/icons/icon-sort-newest.svg';
-import { ReactComponent as SortOldestIcon } from 'assets/icons/icon-sort-oldest.svg';
-import { ReactComponent as SortAscIcon } from 'assets/icons/icon-sort-asc.svg';
-import { ReactComponent as SortDescIcon } from 'assets/icons/icon-sort-desc.svg';
-import { ReactComponent as SortBlueIcon } from 'assets/icons/icon-sort-blue.svg';
-import { ReactComponent as SortIcon } from 'assets/icons/icon-sort.svg';
-import { ReactComponent as CheckIcon } from 'assets/icons/icon-check.svg';
-import { SORT } from 'common/constants/activity';
+import SortNewestIcon from '../../assets/icons/icon-sort-newest.svg';
+import SortOldestIcon from '../../assets/icons/icon-sort-oldest.svg';
+import SortAscIcon from '../../assets/icons/icon-sort-asc.svg';
+import SortDescIcon from '../../assets/icons/icon-sort-desc.svg';
+import SortBlueIcon from '../../assets/icons/icon-sort-blue.svg';
+import SortIcon from '../../assets/icons/icon-sort.svg';
+import CheckIcon from '../../assets/icons/icon-check.svg';
+import { SORT } from '../constants/activity';
 
 function SortDropdown({ value, onChange }) {
-  const dropdownRef = useRef(null);
-  const dropdown = useRef(null);
+  const dropdownRef = React.useRef(null);
+  const dropdown = React.useRef(null);
 
   const sorts = [
     { key: 'NEWEST', label: SORT.NEWEST, icon: SortNewestIcon },
@@ -24,7 +24,7 @@ function SortDropdown({ value, onChange }) {
     { key: 'DONE', label: SORT.DONE, icon: SortBlueIcon },
   ];
 
-  useEffect(() => {
+  React.useEffect(() => {
     dropdown.current = new Dropdown(dropdownRef.current);
   }, []); // eslint-disable-line
 

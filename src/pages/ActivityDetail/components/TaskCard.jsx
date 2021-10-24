@@ -1,8 +1,9 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ReactComponent as DeleteIcon } from 'assets/icons/icon-delete.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-2.svg';
-import Indicator from 'common/components/Indicator';
+import DeleteIcon from '../../../assets/icons/icon-delete.svg';
+import EditIcon from '../../../assets/icons/icon-edit-2.svg';
+import Indicator from '../../../common/components/Indicator';
 
 const TaskCard = ({ task, onDone, onEdit, onDelete }) => (
   <div className="col-12">

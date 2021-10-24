@@ -1,13 +1,13 @@
-import { lazy, Suspense, useContext, useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Context } from 'layouts';
-import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
-import ModalDelete from 'common/modals/ModalDelete';
+import { Context } from '../../layouts';
+import { addActivity, deleteActivity, fetchActivities } from '../../utils/api';
+import ModalDelete from '../../common/modals/ModalDelete';
 import Header from './components/Header';
 
-const ActivityCard = lazy(() => import('./components/ActivityCard'));
-const Empty = lazy(() => import('common/components/Empty'));
+const Empty = React.lazy(() => import('../../common/components/Empty'));
+const ActivityCard = React.lazy(() => import('./components/ActivityCard'));
 
 function Activity() {
   const history = useHistory();
@@ -22,9 +22,9 @@ function Activity() {
     clearModal,
     setToast,
     resetState,
-  } = useContext(Context);
+  } = React.useContext(Context);
 
-  useEffect(() => {
+  React.useEffect(() => {
     getActivities();
   }, []); // eslint-disable-line
 
@@ -70,13 +70,13 @@ function Activity() {
       <Header onAddActivity={handleAdd} isLoading={isLoading} />
       <div className="row activity-row">
         {data?.length === 0 && !isLoading && (
-          <Suspense fallback={null}>
+          <React.Suspense fallback={null}>
             <Empty type="activity" onClick={handleAdd} data-cy="activity-empty-state" />
-          </Suspense>
+          </React.Suspense>
         )}
         {data?.length > 0 &&
           data.map(activity => (
-            <Suspense key={activity.id} fallback={null}>
+            <React.Suspense key={activity.id} fallback={null}>
               <ActivityCard
                 activity={activity}
                 onViewDetail={() => {
@@ -85,7 +85,7 @@ function Activity() {
                 }}
                 onDelete={() => showModal('DELETE', activity)}
               />
-            </Suspense>
+            </React.Suspense>
           ))}
       </div>
       <ModalDelete

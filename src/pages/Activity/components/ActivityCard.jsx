@@ -1,7 +1,8 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ReactComponent as DeleteIcon } from 'assets/icons/icon-delete.svg';
-import getDateString from 'utils/getDateSting';
+import DeleteIcon from '../../../assets/icons/icon-delete.svg';
+import getDateString from '../../../utils/getDateSting';
 
 const ActivityCard = ({ activity, onViewDetail, onDelete }) => (
   <div className="col-3">

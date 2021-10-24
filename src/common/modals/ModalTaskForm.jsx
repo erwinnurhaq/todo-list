@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'bootstrap/js/dist/modal';
 
-import { PRIORITY } from 'common/constants/activity';
-import Button from 'common/components/Button';
-import Spinner from 'common/components/Spinner';
-import PriorityDropdown from 'common/components/PriorityDropdown';
+import { PRIORITY } from '../constants/activity';
+import Button from '../components/Button';
+import Spinner from '../components/Spinner';
+import PriorityDropdown from '../components/PriorityDropdown';
 
 const initialForm = { priority: PRIORITY.VERYHIGH, title: '', is_active: 1 };
 
 function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
-  const [form, setForm] = useState(initialForm);
-  const modalRef = useRef(null);
-  const modal = useRef(null);
+  const [form, setForm] = React.useState(initialForm);
+  const modalRef = React.useRef(null);
+  const modal = React.useRef(null);
 
   const toggleModal = () => (isShow ? modal.current.show() : modal.current.hide());
   const handleClose = () => modal.current.hide();
@@ -21,7 +21,7 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
     onSave(form);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     modal.current = new Modal(modalRef.current);
     modalRef.current.addEventListener('hide.bs.modal', () => {
       setForm(initialForm);
@@ -29,7 +29,7 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
     });
   }, []); // eslint-disable-line
 
-  useEffect(() => {
+  React.useEffect(() => {
     toggleModal();
     if (isShow && task) {
       setForm({
