@@ -43,7 +43,7 @@ function Activity() {
     try {
       setIsLoading(true);
       const res = await addActivity('New Activity');
-      setData(prev => [res, ...prev]);
+      setData([res, ...data]);
       getActivities();
     } catch {
       setToast('Gagal menambahkan activity baru.');
@@ -55,7 +55,7 @@ function Activity() {
     try {
       setIsLoading(true);
       await deleteActivity(id);
-      setData(prev => prev.filter(i => i.id !== id));
+      setData(data.filter(i => i.id !== id));
       setToast('Berhasil menghapus activity.');
       getActivities();
     } catch {

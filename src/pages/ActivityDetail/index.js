@@ -75,7 +75,7 @@ function ActivityDetail() {
     try {
       setIsLoading(true);
       await editActivity(params.id, title);
-      setData(prev => ({ ...prev, title }));
+      setData({ ...data, title });
       setIsLoading(false);
     } catch {
       setToast('Gagal mengganti title activity.');
@@ -87,7 +87,7 @@ function ActivityDetail() {
     try {
       setIsLoading(true);
       const res = await addTask({ activity_group_id: params.id, title, priority });
-      setData(prev => ({ ...prev, todo_items: [res, ...prev.todo_items] }));
+      setData({ ...data, todo_items: [res, ...data.todo_items] });
       setToast('Berhasil menambahkan task baru.');
       setIsLoading(false);
     } catch {
@@ -100,10 +100,10 @@ function ActivityDetail() {
     try {
       setIsLoading(true);
       await editTask(task);
-      setData(prev => ({
-        ...prev,
-        todo_items: prev.todo_items.map(i => (i.id === task.id ? task : i)),
-      }));
+      setData({
+        ...data,
+        todo_items: data.todo_items.map(i => (i.id === task.id ? task : i)),
+      });
       if (selected.id) setToast('Berhasil edit task.');
       setIsLoading(false);
     } catch {
@@ -116,10 +116,10 @@ function ActivityDetail() {
     try {
       setIsLoading(true);
       await deleteTask(id);
-      setData(prev => ({
-        ...prev,
-        todo_items: prev.todo_items.filter(i => i.id !== id),
-      }));
+      setData({
+        ...data,
+        todo_items: data.todo_items.filter(i => i.id !== id),
+      });
       setToast('Berhasil delete task.');
       setIsLoading(false);
     } catch {
