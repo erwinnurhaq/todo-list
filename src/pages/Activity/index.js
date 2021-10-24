@@ -7,7 +7,7 @@ import ModalDelete from 'common/modals/ModalDelete';
 import Header from './components/Header';
 
 const ActivityCard = lazy(() => import('./components/ActivityCard'));
-const Empty = lazy(() => import('./components/Empty'));
+const Empty = lazy(() => import('common/components/Empty'));
 
 function Activity() {
   const history = useHistory();
@@ -70,7 +70,7 @@ function Activity() {
       <div className="row activity-row">
         {data?.length === 0 && !isLoading && (
           <Suspense fallback={null}>
-            <Empty onClick={handleAdd} />
+            <Empty type="activity" onClick={handleAdd} data-cy="activity-empty-state" />
           </Suspense>
         )}
         {data?.length > 0 &&

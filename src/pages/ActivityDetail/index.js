@@ -9,8 +9,8 @@ import ModalTaskForm from 'common/modals/ModalTaskForm';
 import ModalDelete from 'common/modals/ModalDelete';
 import Header from './components/Header';
 
-const Empty = lazy(() => import('./components/Empty'));
 const TaskCard = lazy(() => import('./components/TaskCard'));
+const Empty = lazy(() => import('common/components/Empty'));
 
 function ActivityDetail() {
   const params = useParams();
@@ -140,7 +140,7 @@ function ActivityDetail() {
       <div className="row task-row">
         {todos.length === 0 && !isLoading && (
           <Suspense fallback={null}>
-            <Empty onClick={() => showModal('TASK')} />
+            <Empty type="list item" onClick={() => showModal('TASK')} data-cy="todo-empty-state" />
           </Suspense>
         )}
         {todos.length > 0 &&
