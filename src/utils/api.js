@@ -1,34 +1,52 @@
-import Axios from 'axios';
-
-const axios = Axios.create({
-  baseURL: 'https://todo.api.devcode.gethired.id',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-});
+const baseURL = 'https://todo.api.devcode.gethired.id';
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
 const email = 'enurhaq@gmail.com';
 const encodedEmail = encodeURIComponent(email);
 
 const fetchActivities = () =>
-  axios.get(`/activity-groups?email=${encodedEmail}`).then(res => res.data);
+  fetch(`${baseURL}/activity-groups?email=${encodedEmail}`, { method: 'GET', headers }).then(res =>
+    res.json()
+  );
 
-const addActivity = title => axios.post(`/activity-groups`, { title, email }).then(res => res.data);
+const addActivity = title =>
+  fetch(`${baseURL}/activity-groups`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ title, email }),
+  }).then(res => res.json());
 
 const editActivity = (id, title) =>
-  axios.patch(`/activity-groups/${id}`, { title }).then(res => res.data);
+  fetch(`${baseURL}/activity-groups/${id}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ title }),
+  }).then(res => res.json());
 
-const deleteActivity = id => axios.delete(`/activity-groups/${id}`).then(res => res.data);
+const deleteActivity = id =>
+  fetch(`${baseURL}/activity-groups/${id}`, { method: 'DELETE', headers }).then(res => res.json());
 
-const fetchDetail = id => axios.get(`/activity-groups/${id}`).then(res => res.data);
+const fetchDetail = id =>
+  fetch(`${baseURL}/activity-groups/${id}`, { method: 'GET', headers }).then(res => res.json());
 
 const addTask = ({ activity_group_id, title, priority }) =>
-  axios.post(`/todo-items`, { activity_group_id, title, priority }).then(res => res.data);
+  fetch(`${baseURL}/todo-items`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ activity_group_id, title, priority }),
+  }).then(res => res.json());
 
 const editTask = ({ id, title, is_active, priority }) =>
-  axios.patch(`/todo-items/${id}`, { title, is_active, priority }).then(res => res.data);
+  fetch(`${baseURL}/todo-items/${id}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ title, is_active, priority }),
+  }).then(res => res.json());
 
-const deleteTask = id => axios.delete(`/todo-items/${id}`).then(res => res.data);
+const deleteTask = id =>
+  fetch(`${baseURL}/todo-items/${id}`, { method: 'DELETE', headers }).then(res => res.json());
 
 export {
   fetchActivities,
