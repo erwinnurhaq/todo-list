@@ -1,0 +1,47 @@
+.sort-dropdown {
+  position: relative;
+}
+.sort-dropdown__toggle {
+  background: none;
+  width: 3.375rem;
+  height: 3.375rem;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  margin: 0 1.125rem;
+}
+.sort-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border-radius: 0.375rem;
+  background-color: var(--white);
+  list-style: none;
+  display: none;
+  border: 1px solid var(--divider);
+  z-index: 1000;
+}
+.sort-dropdown__menu.show {
+  display: block;
+}
+.sort-dropdown__menu li:not(:last-child) {
+  border-bottom: 1px solid var(--divider);
+}
+.sort-dropdown__menu .sort-dropdown__item {
+  display: flex;
+  align-items: center;
+  height: 3.25rem;
+  width: 12rem;
+  border: none;
+  background-color: transparent;
+  padding: 0 1rem;
+}
+.sort-dropdown__menu .sort-dropdown__item:hover {
+  background-color: var(--divider);
+}
+.sort-dropdown__menu .sort-dropdown__item div svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.sort-dropdown__menu .sort-dropdown__item p {
+  margin: 0 1rem;
+}

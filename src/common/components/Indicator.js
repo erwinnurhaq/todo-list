@@ -1,11 +1,8 @@
-import PropTypes from 'prop-types';
+import React from 'react';
+import './indicator.css';
 
-function Indicator({ priority, ...props }) {
-  return <div className={`priority-indicator ${priority}`} {...props} />;
-}
-
-Indicator.propTypes = {
-  priority: PropTypes.string.isRequired,
-};
+const Indicator = ({ priority, ...props }) => (
+  <div className={`priority-indicator ${priority}`} {...props} />
+);
 
 export default Indicator;

@@ -1,0 +1,5 @@
+.activity-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(229px, 0.25fr));
+  grid-gap: 1rem;
+}

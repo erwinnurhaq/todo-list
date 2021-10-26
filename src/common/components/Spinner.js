@@ -1,6 +1,10 @@
+import React from 'react';
+import { ReactComponent as Oval } from '../../assets/icons/oval.svg';
+import './spinner.css';
+
 const Spinner = () => (
-  <div className="spinner-border text-light">
-    <span className="visually-hidden">Loading...</span>
+  <div className="spinner">
+    <Oval />
   </div>
 );
 
