@@ -1,13 +1,14 @@
-import { lazy, Suspense, useContext, useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Context } from 'layouts';
-import { addActivity, deleteActivity, fetchActivities } from 'utils/api';
-import ModalDelete from 'common/modals/ModalDelete';
+import { Context } from '../../layouts';
+import { addActivity, deleteActivity, fetchActivities } from '../../utils/api';
 import Header from './components/Header';
+import './index.css';
 
-const ActivityCard = lazy(() => import('./components/ActivityCard'));
-const Empty = lazy(() => import('common/components/Empty'));
+const ModalDelete = React.lazy(() => import('../../common/modals/ModalDelete'));
+const ActivityCard = React.lazy(() => import('./components/ActivityCard'));
+const Empty = React.lazy(() => import('../../common/components/Empty'));
 
 function Activity() {
   const history = useHistory();
@@ -22,9 +23,9 @@ function Activity() {
     clearModal,
     setToast,
     resetState,
-  } = useContext(Context);
+  } = React.useContext(Context);
 
-  useEffect(() => {
+  React.useEffect(() => {
     getActivities();
   }, []); // eslint-disable-line
 
@@ -56,7 +57,7 @@ function Activity() {
     try {
       setIsLoading(true);
       await deleteActivity(id);
-      setData(data.filter(i => i.id !== id));
+      setData(data.filter((i) => i.id !== id));
       setToast('Berhasil menghapus activity.');
       getActivities();
     } catch {
@@ -68,15 +69,15 @@ function Activity() {
   return (
     <section className="container">
       <Header onAddActivity={handleAdd} isLoading={isLoading} />
-      <div className="row activity-row">
+      <div className="activity-row">
         {data?.length === 0 && !isLoading && (
-          <Suspense fallback={null}>
+          <React.Suspense fallback={null}>
             <Empty type="activity" onClick={handleAdd} data-cy="activity-empty-state" />
-          </Suspense>
+          </React.Suspense>
         )}
         {data?.length > 0 &&
-          data.map(activity => (
-            <Suspense key={activity.id} fallback={null}>
+          data.map((activity) => (
+            <React.Suspense key={activity.id} fallback={null}>
               <ActivityCard
                 activity={activity}
                 onViewDetail={() => {
@@ -85,17 +86,19 @@ function Activity() {
                 }}
                 onDelete={() => showModal('DELETE', activity)}
               />
-            </Suspense>
+            </React.Suspense>
           ))}
       </div>
-      <ModalDelete
-        isShow={modal === 'DELETE'}
-        isLoading={isLoading}
-        onClose={clearModal}
-        onDelete={() => handleDelete(selected.id)}
-        type="activity"
-        title={selected.title}
-      />
+      <React.Suspense fallback={null}>
+        <ModalDelete
+          isShow={modal === 'DELETE'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onDelete={() => handleDelete(selected.id)}
+          type="activity"
+          title={selected.title}
+        />
+      </React.Suspense>
     </section>
   );
 }

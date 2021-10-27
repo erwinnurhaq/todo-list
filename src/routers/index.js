@@ -1,8 +1,9 @@
+import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Layout from 'layouts';
-import Activity from 'pages/Activity';
-import ActivityDetail from 'pages/ActivityDetail';
+import Layout from '../layouts';
+import Activity from '../pages/Activity';
+import ActivityDetail from '../pages/ActivityDetail';
 
 const App = () => (
   <BrowserRouter>

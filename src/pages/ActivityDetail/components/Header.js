@@ -1,25 +1,23 @@
-import { useRef, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
-import { ReactComponent as PlusIcon } from 'assets/icons/icon-plus.svg';
-import { ReactComponent as BackIcon } from 'assets/icons/icon-back.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/icon-edit-1.svg';
-import Button from 'common/components/Button';
-import SortDropdown from 'common/components/SortDropdown';
+import React from 'react';
+import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg';
+import { ReactComponent as BackIcon } from '../../../assets/icons/icon-back.svg';
+import { ReactComponent as EditIcon } from '../../../assets/icons/icon-edit-1.svg';
+import Button from '../../../common/components/Button';
+import SortDropdown from '../../../common/components/SortDropdown';
 
 function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
-  const [isEditTitle, setIsEditTitle] = useState(false);
-  const titleInput = useRef(null);
+  const [isEditTitle, setIsEditTitle] = React.useState(false);
+  const titleInput = React.useRef(null);
 
   const toggleTitleEdit = () => {
     setIsEditTitle(!isEditTitle);
   };
-  const handleSaveTitle = ev => {
+  const handleSaveTitle = (ev) => {
     onEditTitle(ev.target.value);
     toggleTitleEdit();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isEditTitle) {
       titleInput.current.focus();
     }
@@ -43,7 +41,7 @@ function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
             ref={titleInput}
             defaultValue={title}
             onBlur={handleSaveTitle}
-            onKeyDown={ev => (ev.key === 'Enter' ? handleSaveTitle(ev) : null)}
+            onKeyDown={(ev) => (ev.key === 'Enter' ? handleSaveTitle(ev) : null)}
           />
         ) : (
           <h1 data-cy="todo-title" className="content-header__title" onClick={toggleTitleEdit}>
@@ -70,17 +68,5 @@ function Header({ title, sort, setSort, onBack, onAddTask, onEditTitle }) {
     </div>
   );
 }
-
-Header.propTypes = {
-  title: PropTypes.string,
-  sort: PropTypes.string.isRequired,
-  setSort: PropTypes.func.isRequired,
-  onBack: PropTypes.func.isRequired,
-  onAddTask: PropTypes.func.isRequired,
-  onEditTitle: PropTypes.func.isRequired,
-};
-Header.defaultProps = {
-  title: 'Activity',
-};
 
 export default Header;

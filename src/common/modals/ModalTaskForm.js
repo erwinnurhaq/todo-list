@@ -1,36 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import Modal from 'bootstrap/js/dist/modal';
-
-import { PRIORITY } from 'common/constants/activity';
-import Button from 'common/components/Button';
-import Spinner from 'common/components/Spinner';
-import PriorityDropdown from 'common/components/PriorityDropdown';
+import React from 'react';
+import { PRIORITY } from '../constants/activity';
+import Button from '../components/Button';
+import Spinner from '../components/Spinner';
+import PriorityDropdown from '../components/PriorityDropdown';
+import './modal.css';
+import './modal-task.css';
 
 const initialForm = { priority: PRIORITY.VERYHIGH, title: '', is_active: 1 };
 
 function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
-  const [form, setForm] = useState(initialForm);
-  const modalRef = useRef(null);
-  const modal = useRef(null);
+  const [form, setForm] = React.useState(initialForm);
 
-  const toggleModal = () => (isShow ? modal.current.show() : modal.current.hide());
-  const handleClose = () => modal.current.hide();
-  const handleSave = ev => {
+  const handleSave = (ev) => {
     ev.preventDefault();
     onSave(form);
   };
 
-  useEffect(() => {
-    modal.current = new Modal(modalRef.current);
-    modalRef.current.addEventListener('hide.bs.modal', () => {
-      setForm(initialForm);
-      onClose();
-    });
-  }, []); // eslint-disable-line
-
-  useEffect(() => {
-    toggleModal();
+  React.useEffect(() => {
     if (isShow && task) {
       setForm({
         id: task.id,
@@ -38,80 +24,58 @@ function ModalTaskForm({ isShow, isLoading, onClose, onSave, task }) {
         title: task.title,
         is_active: task.is_active,
       });
+    } else {
+      setForm(initialForm);
     }
   }, [isShow]); // eslint-disable-line
 
   return (
-    <div
-      className="modal"
-      data-cy="modal-add"
-      tabIndex="-1"
-      data-bs-backdrop={isLoading ? 'static' : true}
-      ref={modalRef}
-    >
-      <div className="modal-dialog modal-dialog-centered task-modal">
-        <form className="modal-content task-form" onSubmit={handleSave}>
-          <div className="modal-header">
-            <h5 data-cy="modal-add-title" className="modal-title">
-              {task ? 'Edit Item' : 'Tambah List Item'}
-            </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-cy="modal-add-close-button"
-              onClick={handleClose}
-              disabled={isLoading}
+    <div className={`modal${isShow ? ' show' : ''}`} data-cy="modal-add">
+      <div className="backdrop" onClick={onClose} />
+      <form className="modal-task" onSubmit={handleSave}>
+        <div className="modal-task__header">
+          <h5 data-cy="modal-add-title">{task ? 'Edit Item' : 'Tambah List Item'}</h5>
+          <button type="button" data-cy="modal-add-close-button" onClick={onClose}>
+            X
+          </button>
+        </div>
+        <div className="modal-task__body">
+          <div className="modal-task__row">
+            <label className="modal-task__row-label" data-cy="modal-add-name-title">
+              NAMA LIST ITEM
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              data-cy="modal-add-name-input"
+              placeholder="Tambahkan nama list item"
+              value={form.title}
+              onChange={(ev) => setForm({ ...form, title: ev.target.value })}
             />
           </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <label htmlFor="form-task-name" className="form-label" data-cy="modal-add-name-title">
-                NAMA LIST ITEM
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                data-cy="modal-add-name-input"
-                id="form-task-name"
-                placeholder="Tambahkan nama list item"
-                value={form.title}
-                onChange={ev => setForm({ ...form, title: ev.target.value })}
-                disabled={isLoading}
-              />
-            </div>
-            <label className="form-label" data-cy="modal-add-priority-title">
+          <div className="modal-task__row">
+            <label className="modal-task__row-label" data-cy="modal-add-priority-title">
               PRIORITY
             </label>
             <PriorityDropdown
               value={form.priority}
-              onChange={val => setForm({ ...form, priority: val })}
+              onChange={(val) => setForm({ ...form, priority: val })}
             />
           </div>
-          <div className="modal-footer">
-            <Button
-              type="submit"
-              color="primary"
-              disabled={isLoading || form.title.length === 0}
-              data-cy="modal-add-save-button"
-            >
-              {isLoading ? <Spinner /> : <p>Simpan</p>}
-            </Button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="modal-task__footer">
+          <Button
+            type="submit"
+            color="primary"
+            disabled={form.title.length === 0}
+            data-cy="modal-add-save-button"
+          >
+            {isLoading ? <Spinner /> : <p>Simpan</p>}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
-
-ModalTaskForm.propTypes = {
-  isShow: PropTypes.bool.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  task: PropTypes.objectOf(PropTypes.any),
-};
-ModalTaskForm.defaultProps = {
-  task: null,
-};
 
 export default ModalTaskForm;

@@ -1,22 +1,23 @@
-import { lazy, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-import { Context } from 'layouts';
-import sortString from 'utils/sortString';
-import { fetchDetail, addTask, editTask, deleteTask, editActivity } from 'utils/api';
-import { SORT } from 'common/constants/activity';
-import ModalTaskForm from 'common/modals/ModalTaskForm';
-import ModalDelete from 'common/modals/ModalDelete';
+import { Context } from '../../layouts';
+import sortString from '../../utils/sortString';
+import { fetchDetail, addTask, editTask, deleteTask, editActivity } from '../../utils/api';
+import { SORT } from '../../common/constants/activity';
 import Header from './components/Header';
+import './index.css';
 
-const TaskCard = lazy(() => import('./components/TaskCard'));
-const Empty = lazy(() => import('common/components/Empty'));
+const ModalTaskForm = React.lazy(() => import('../../common/modals/ModalTaskForm'));
+const ModalDelete = React.lazy(() => import('../../common/modals/ModalDelete'));
+const TaskCard = React.lazy(() => import('./components/TaskCard'));
+const Empty = React.lazy(() => import('../../common/components/Empty'));
 
 function ActivityDetail() {
   const params = useParams();
   const history = useHistory();
 
-  const [sort, setSort] = useState(SORT.NEWEST);
+  const [sort, setSort] = React.useState(SORT.NEWEST);
   const {
     data,
     setData,
@@ -28,9 +29,9 @@ function ActivityDetail() {
     clearModal,
     setToast,
     resetState,
-  } = useContext(Context);
+  } = React.useContext(Context);
 
-  const handleSort = useCallback(
+  const handleSort = React.useCallback(
     (a, b) => {
       switch (sort) {
         case SORT.NEWEST:
@@ -52,12 +53,12 @@ function ActivityDetail() {
     [sort]
   );
 
-  const todos = useMemo(() => (data?.todo_items ? data.todo_items.sort(handleSort) : []), [
-    data,
-    handleSort,
-  ]);
+  const todos = React.useMemo(
+    () => (data?.todo_items ? data.todo_items.sort(handleSort) : []),
+    [data, handleSort]
+  );
 
-  useEffect(() => {
+  React.useEffect(() => {
     getActivityDetail();
   }, []); // eslint-disable-line
 
@@ -104,7 +105,7 @@ function ActivityDetail() {
       await editTask(task);
       setData({
         ...data,
-        todo_items: data.todo_items.map(i => (i.id === task.id ? task : i)),
+        todo_items: data.todo_items.map((i) => (i.id === task.id ? task : i)),
       });
       if (selected.id) setToast('Berhasil edit task.');
       setIsLoading(false);
@@ -120,7 +121,7 @@ function ActivityDetail() {
       await deleteTask(id);
       setData({
         ...data,
-        todo_items: data.todo_items.filter(i => i.id !== id),
+        todo_items: data.todo_items.filter((i) => i.id !== id),
       });
       setToast('Berhasil delete task.');
       setIsLoading(false);
@@ -145,37 +146,39 @@ function ActivityDetail() {
       />
       <div className="row task-row">
         {todos.length === 0 && !isLoading && (
-          <Suspense fallback={null}>
+          <React.Suspense fallback={null}>
             <Empty type="list item" onClick={() => showModal('TASK')} data-cy="todo-empty-state" />
-          </Suspense>
+          </React.Suspense>
         )}
         {todos.length > 0 &&
-          todos.map(task => (
-            <Suspense key={task.id} fallback={null}>
+          todos.map((task) => (
+            <React.Suspense key={task.id} fallback={null}>
               <TaskCard
                 task={task}
-                onDone={val => handleEditTask({ ...task, is_active: val })}
+                onDone={(val) => handleEditTask({ ...task, is_active: val })}
                 onEdit={() => showModal('TASK', task)}
                 onDelete={() => showModal('DELETE', task)}
               />
-            </Suspense>
+            </React.Suspense>
           ))}
       </div>
-      <ModalDelete
-        isShow={modal === 'DELETE'}
-        isLoading={isLoading}
-        onClose={clearModal}
-        onDelete={() => handleDeleteTask(selected.id)}
-        type="list item"
-        title={selected.title}
-      />
-      <ModalTaskForm
-        isShow={modal === 'TASK'}
-        isLoading={isLoading}
-        onClose={clearModal}
-        onSave={task => (selected.id ? handleEditTask(task) : handleAddTask(task))}
-        task={selected.id ? selected : null}
-      />
+      <React.Suspense fallback={null}>
+        <ModalDelete
+          isShow={modal === 'DELETE'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onDelete={() => handleDeleteTask(selected.id)}
+          type="list item"
+          title={selected.title}
+        />
+        <ModalTaskForm
+          isShow={modal === 'TASK'}
+          isLoading={isLoading}
+          onClose={clearModal}
+          onSave={(task) => (selected.id ? handleEditTask(task) : handleAddTask(task))}
+          task={selected.id ? selected : null}
+        />
+      </React.Suspense>
     </section>
   );
 }

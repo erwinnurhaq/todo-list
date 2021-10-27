@@ -1,8 +1,9 @@
-import { createContext, useReducer } from 'react';
-import PropTypes from 'prop-types';
-import ModalToast from 'common/modals/ModalToast';
+import React from 'react';
+import './index.css';
 
-export const Context = createContext();
+const ModalToast = React.lazy(() => import('../common/modals/ModalToast'));
+
+export const Context = React.createContext();
 
 const initialState = {
   data: null,
@@ -34,7 +35,7 @@ function reducer(state, action) {
 }
 
 function Layout({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
   function resetState() {
     dispatch({ type: 'reset.state' });
@@ -74,16 +75,11 @@ function Layout({ children }) {
         </div>
       </header>
       {children}
-      <ModalToast isShow={!!state.toast} message={state.toast} onClose={() => setToast('')} />
+      <React.Suspense fallback={null}>
+        <ModalToast isShow={!!state.toast} message={state.toast} onClose={() => setToast('')} />
+      </React.Suspense>
     </Context.Provider>
   );
 }
-
-Layout.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
-};
-Layout.defaultProps = {
-  children: '',
-};
 
 export default Layout;

@@ -1,0 +1,55 @@
+.modal-task {
+  border-radius: 0.75rem;
+  background-color: var(--white);
+  position: relative;
+  z-index: 1000;
+  min-width: 828px;
+}
+.modal-task__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--divider);
+}
+.modal-task__header h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.modal-task__header button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+}
+.modal-task__body {
+  padding: 2.4rem 2rem 2.4rem 2rem;
+}
+.modal-task__body .modal-task__row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.modal-task__body .modal-task__row-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.modal-task__body .form-control {
+  height: 3.25rem;
+  padding: 0 1.25rem;
+  caret-color: var(--primary);
+  border: 1px solid var(--divider);
+  border-radius: 5px;
+  outline: none;
+  font-size: 1rem;
+}
+.modal-task__body .form-control:focus {
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 2px rgba(22, 173, 248, 0.05);
+}
+.modal-task__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--divider);
+}

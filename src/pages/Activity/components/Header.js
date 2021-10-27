@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import { ReactComponent as IconPlus } from 'assets/icons/icon-plus.svg';
-import Button from 'common/components/Button';
+import React from 'react';
+import { ReactComponent as IconPlus } from '../../../assets/icons/icon-plus.svg';
+import Button from '../../../common/components/Button';
 
 const Header = ({ onAddActivity, isLoading }) => (
   <div className="content-header">
@@ -18,10 +18,5 @@ const Header = ({ onAddActivity, isLoading }) => (
     </Button>
   </div>
 );
-
-Header.propTypes = {
-  onAddActivity: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-};
 
 export default Header;
