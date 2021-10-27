@@ -2,10 +2,13 @@
   "name": "todos",
   "version": "1.0.0",
   "description": "todos app",
+  "homepage": "https://erwinnurhaq.github.io/todo-list/",
   "scripts": {
     "prepare": "husky install",
     "start": "webpack-dev-server --mode development --open --hot",
-    "build": "rm -rf build && webpack --mode production"
+    "build": "rm -rf build && webpack --mode production",
+    "predeploy": "rm -rf build && webpack --config webpack-gh.config.js --mode production",
+    "deploy": "gh-pages -d build"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -32,6 +35,7 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.2",
     "file-loader": "^6.0.0",
+    "gh-pages": "3.2.3",
     "html-webpack-plugin": "^4.2.0",
     "husky": "7.0.4",
     "mini-css-extract-plugin": "^0.9.0",
