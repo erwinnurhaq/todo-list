@@ -2,7 +2,6 @@ import React from 'react';
 import { ReactComponent as AlertIcon } from '../../assets/icons/icon-alert.svg';
 import Button from '../components/Button';
 import Spinner from '../components/Spinner';
-import './modal.css';
 import './modal-delete.css';
 
 const ModalDelete = ({ isShow, isLoading, onClose, onDelete, type, title }) => (
