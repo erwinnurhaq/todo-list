@@ -1,8 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Context } from '../../layouts';
-import { addActivity, deleteActivity, fetchActivities } from '../../utils/api';
+import { addActivity, deleteActivity, fetchActivities } from '../../redux/actions/activities';
+import { setModal, clearModal } from '../../redux/actions/common';
+import { POPUP } from '../../common/constants/activity';
 import Header from './components/Header';
 import './index.css';
 
@@ -12,89 +14,44 @@ const Empty = React.lazy(() => import('../../common/components/Empty'));
 
 function Activity() {
   const history = useHistory();
-  const {
-    data,
-    setData,
-    isLoading,
-    setIsLoading,
-    selected,
-    modal,
-    showModal,
-    clearModal,
-    setToast,
-    resetState,
-  } = React.useContext(Context);
+  const dispatch = useDispatch();
+  const { activities } = useSelector((state) => state.activities);
+  const { loading, modal, selected } = useSelector((state) => state.common);
 
   React.useEffect(() => {
-    getActivities();
+    dispatch(fetchActivities());
   }, []); // eslint-disable-line
-
-  async function getActivities() {
-    try {
-      setIsLoading(true);
-      const res = await fetchActivities();
-      setData(res.data);
-      setIsLoading(false);
-    } catch {
-      setToast('Gagal mendapatkan activity.');
-      setIsLoading(false);
-    }
-  }
-
-  async function handleAdd() {
-    try {
-      setIsLoading(true);
-      const res = await addActivity('New Activity');
-      setData([res, ...data]);
-      getActivities();
-    } catch {
-      setToast('Gagal menambahkan activity baru.');
-      setIsLoading(false);
-    }
-  }
-
-  async function handleDelete(id) {
-    try {
-      setIsLoading(true);
-      await deleteActivity(id);
-      setData(data.filter((i) => i.id !== id));
-      setToast('Berhasil menghapus activity.');
-      getActivities();
-    } catch {
-      setToast('Gagal menghapus activity.');
-      setIsLoading(false);
-    }
-  }
 
   return (
     <section className="container">
-      <Header onAddActivity={handleAdd} isLoading={isLoading} />
+      <Header onAddActivity={() => dispatch(addActivity())} isLoading={loading} />
       <div className="activity-row">
-        {data?.length === 0 && !isLoading && (
+        {activities?.length === 0 && !loading && (
           <React.Suspense fallback={null}>
-            <Empty type="activity" onClick={handleAdd} data-cy="activity-empty-state" />
+            <Empty
+              type="activity"
+              onClick={() => dispatch(addActivity())}
+              data-cy="activity-empty-state"
+            />
           </React.Suspense>
         )}
-        {data?.length > 0 &&
-          data.map((activity) => (
+        {activities?.length > 0 &&
+          activities.map((activity) => (
             <React.Suspense key={activity.id} fallback={null}>
               <ActivityCard
                 activity={activity}
-                onViewDetail={() => {
-                  resetState();
-                  history.push(`/detail/${activity.id}`);
-                }}
-                onDelete={() => showModal('DELETE', activity)}
+                onViewDetail={() => history.push(`/detail/${activity.id}`)}
+                onDelete={() => dispatch(setModal(POPUP.DELETE, activity))}
               />
             </React.Suspense>
           ))}
       </div>
       <React.Suspense fallback={null}>
         <ModalDelete
-          isShow={modal === 'DELETE'}
-          isLoading={isLoading}
-          onClose={clearModal}
-          onDelete={() => handleDelete(selected.id)}
+          isShow={modal === POPUP.DELETE}
+          isLoading={loading}
+          onClose={() => dispatch(clearModal())}
+          onDelete={() => dispatch(deleteActivity(selected.id))}
           type="activity"
           title={selected.title}
         />

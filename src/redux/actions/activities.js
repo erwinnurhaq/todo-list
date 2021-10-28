@@ -1,5 +1,16 @@
 import Axios from 'axios';
-import { setIsLoading, setToast } from './common';
+import { POPUP } from '../../common/constants/activity';
+import {
+  SET_ACTIVITIES,
+  ADD_ACTIVITY,
+  UPDATE_ACTIVITY,
+  DELETE_ACTIVITY,
+  SET_DETAIL_ACTIVITY,
+  ADD_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+} from '../types';
+import { setIsLoading, setModal } from './common';
 
 const axios = Axios.create({
   baseURL: 'https://todo.api.devcode.gethired.id',
@@ -15,11 +26,10 @@ const fetchActivities = () => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
     const res = await axios.get(`/activity-groups?email=${encodedEmail}`);
-    setData(res.data.data);
+    dispatch({ type: SET_ACTIVITIES, payload: res.data.data });
     dispatch(setIsLoading(false));
   } catch {
-    dispatch(setToast('Gagal mendapatkan activity.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal mendapatkan activity.'));
   }
 };
 
@@ -27,11 +37,10 @@ const addActivity = () => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
     const res = await axios.post(`/activity-groups`, { title: 'New Activity', email });
-    setData([res, ...data]);
-    getActivities();
+    dispatch({ type: ADD_ACTIVITY, payload: res.data });
+    dispatch(fetchActivities());
   } catch {
-    dispatch(setToast('Gagal menambahkan activity baru.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal menambahkan activity baru.'));
   }
 };
 
@@ -39,85 +48,78 @@ const deleteActivity = (id) => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
     await axios.delete(`/activity-groups/${id}`);
-    setData(data.filter((i) => i.id !== id));
-    dispatch(setToast('Berhasil menghapus activity.'));
-    getActivities();
+    dispatch({ type: DELETE_ACTIVITY, payload: id });
+    dispatch(setModal(POPUP.TOAST, {}, 'Berhasil menghapus activity.'));
   } catch {
-    dispatch(setToast('Gagal menghapus activity.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal menghapus activity.'));
   }
 };
 
-const fetchDetail = () => async (dispatch) => {
+const fetchDetail = (id) => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
-    const res = await fetchDetail(params.id);
-    setData(res);
+    const res = await axios.get(`/activity-groups/${id}`);
+    dispatch({ type: SET_DETAIL_ACTIVITY, payload: res.data });
     dispatch(setIsLoading(false));
   } catch {
-    dispatch(setToast('Gagal mendapatkan detail activity.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal mendapatkan detail activity.'));
   }
 };
 
 const editActivity = (id, title) => async (dispatch) => {
   try {
-    dispatch(setIsLoading(true));
     await axios.patch(`/activity-groups/${id}`, { title });
-    setData({ ...data, title });
-    dispatch(setIsLoading(false));
+    dispatch({ type: UPDATE_ACTIVITY, payload: title });
   } catch {
-    dispatch(setToast('Gagal mengganti title activity.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal mengganti title activity.'));
   }
 };
 
 const addTask =
-  ({ title, priority }) =>
+  ({ activity_group_id, title, priority }) =>
   async (dispatch) => {
     try {
       dispatch(setIsLoading(true));
-      const res = await addTask({ activity_group_id: params.id, title, priority });
-      setData({ ...data, todo_items: [res, ...data.todo_items] });
-      dispatch(setToast('Berhasil menambahkan task baru.'));
-      dispatch(setIsLoading(false));
+      const res = await axios.post(`/todo-items`, { activity_group_id, title, priority });
+      dispatch({ type: ADD_TASK, payload: res.data });
+      dispatch(setModal(POPUP.TOAST, {}, 'Berhasil menambahkan task baru.'));
     } catch {
-      dispatch(setToast('Gagal menambahkan task baru.'));
-      dispatch(setIsLoading(false));
+      dispatch(setModal(POPUP.TOAST, {}, 'Gagal menambahkan task baru.'));
     }
   };
 
-const editTask = (task) => async (dispatch, getState) => {
-  try {
-    const selectedId = getState();
-    console.log(selectedId);
-    dispatch(setIsLoading(true));
-    await editTask(task);
-    setData({
-      ...data,
-      todo_items: data.todo_items.map((i) => (i.id === task.id ? task : i)),
-    });
-    if (selected.id) dispatch(setToast('Berhasil edit task.'));
-    dispatch(setIsLoading(false));
-  } catch {
-    if (selected.id) dispatch(setToast('Gagal edit task.'));
-    dispatch(setIsLoading(false));
-  }
-};
+const editTask =
+  ({ id, title, is_active, priority }) =>
+  async (dispatch) => {
+    try {
+      dispatch(setIsLoading(true));
+      await axios.patch(`/todo-items/${id}`, { title, is_active, priority });
+      dispatch({ type: UPDATE_TASK, payload: { id, title, is_active, priority } });
+      dispatch(setModal(POPUP.TOAST, {}, 'Berhasil edit task.'));
+    } catch {
+      dispatch(setModal(POPUP.TOAST, {}, 'Gagal edit task.'));
+    }
+  };
+
+const toggleTask =
+  ({ id, title, is_active, priority }) =>
+  async (dispatch) => {
+    try {
+      await axios.patch(`/todo-items/${id}`, { title, is_active, priority });
+      dispatch({ type: UPDATE_TASK, payload: { id, title, is_active, priority } });
+    } catch {
+      dispatch(setModal(POPUP.TOAST, {}, 'Gagal edit task.'));
+    }
+  };
 
 const deleteTask = (id) => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
-    await deleteTask(id);
-    setData({
-      ...data,
-      todo_items: data.todo_items.filter((i) => i.id !== id),
-    });
-    dispatch(setToast('Berhasil delete task.'));
-    dispatch(setIsLoading(false));
+    await axios.delete(`/todo-items/${id}`);
+    dispatch({ type: DELETE_TASK, payload: id });
+    dispatch(setModal(POPUP.TOAST, {}, 'Berhasil delete task.'));
   } catch {
-    dispatch(setToast('Gagal delete task.'));
-    dispatch(setIsLoading(false));
+    dispatch(setModal(POPUP.TOAST, {}, 'Gagal delete task.'));
   }
 };
 
@@ -129,5 +131,6 @@ export {
   editActivity,
   addTask,
   editTask,
+  toggleTask,
   deleteTask,
 };
