@@ -46,6 +46,7 @@ function Activity() {
       setIsLoading(true);
       const res = await addActivity('New Activity');
       setData([res, ...data]);
+      getActivities();
     } catch {
       setToast('Gagal menambahkan activity baru.');
       setIsLoading(false);
@@ -58,6 +59,7 @@ function Activity() {
       await deleteActivity(id);
       setData(data.filter((i) => i.id !== id));
       setToast('Berhasil menghapus activity.');
+      setIsLoading(false);
     } catch {
       setToast('Gagal menghapus activity.');
       setIsLoading(false);
