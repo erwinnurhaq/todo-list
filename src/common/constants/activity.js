@@ -1,7 +1,8 @@
 const POPUP = {
   TOAST: 'popup.toast',
   FORM: 'popup.form',
-  DELETE: 'popup.delete',
+  DELETE_ACT: 'popup.delete.act',
+  DELETE_TASK: 'popup.delete.task',
 };
 
 const PRIORITY = {
