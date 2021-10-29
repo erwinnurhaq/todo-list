@@ -2,10 +2,9 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { addActivity, deleteActivity, fetchActivities } from '../../redux/actions/activities';
-import { setModal, clearModal } from '../../redux/actions/common';
+import { addActivity, fetchActivities } from '../../redux/actions/activities';
+import { setModal } from '../../redux/actions/common';
 import { POPUP } from '../../common/constants/activity';
-import ModalDelete from '../../common/modals/ModalDelete';
 import ActivityCard from './components/ActivityCard';
 import Empty from '../../common/components/Empty';
 import Header from './components/Header';
@@ -38,18 +37,10 @@ function Activity() {
               key={activity.id}
               activity={activity}
               onViewDetail={() => history.push(`/detail/${activity.id}`)}
-              onDelete={() => dispatch(setModal(POPUP.DELETE, activity))}
+              onDelete={() => dispatch(setModal(POPUP.DELETE_ACT, activity))}
             />
           ))}
       </div>
-      <ModalDelete
-        isShow={modal === POPUP.DELETE}
-        isLoading={loading}
-        onClose={() => dispatch(clearModal())}
-        onDelete={() => dispatch(deleteActivity(selected.id))}
-        type="activity"
-        title={selected.title}
-      />
     </section>
   );
 }

@@ -6,7 +6,6 @@ import sortString from '../../utils/sortString';
 import {
   fetchDetail,
   addTask,
-  deleteTask,
   editTask,
   toggleTask,
   editActivity,
@@ -14,7 +13,6 @@ import {
 import { setModal, clearModal } from '../../redux/actions/common';
 import { SORT, POPUP } from '../../common/constants/activity';
 import ModalTaskForm from '../../common/modals/ModalTaskForm';
-import ModalDelete from '../../common/modals/ModalDelete';
 import Empty from '../../common/components/Empty';
 import TaskCard from './components/TaskCard';
 import Header from './components/Header';
@@ -85,18 +83,10 @@ function ActivityDetail() {
               task={task}
               onDone={(val) => dispatch(toggleTask({ ...task, is_active: val }))}
               onEdit={() => dispatch(setModal(POPUP.FORM, task))}
-              onDelete={() => dispatch(setModal(POPUP.DELETE, task))}
+              onDelete={() => dispatch(setModal(POPUP.DELETE_TASK, task))}
             />
           ))}
       </div>
-      <ModalDelete
-        isShow={modal === POPUP.DELETE}
-        isLoading={loading}
-        onClose={() => dispatch(clearModal())}
-        onDelete={() => dispatch(deleteTask(selected.id))}
-        type="list item"
-        title={selected.title}
-      />
       <ModalTaskForm
         isShow={modal === POPUP.FORM}
         isLoading={loading}
