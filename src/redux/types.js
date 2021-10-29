@@ -1,0 +1,11 @@
+export const SET_ACTIVITIES = 'SET_ACTIVITIES';
+export const ADD_ACTIVITY = 'ADD_ACTIVITY';
+export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
+export const DELETE_ACTIVITY = 'DELETE_ACTIVITY';
+export const SET_DETAIL_ACTIVITY = 'SET_DETAIL_ACTIVITY';
+export const ADD_TASK = 'ADD_TASK';
+export const UPDATE_TASK = 'UPDATE_TASK';
+export const DELETE_TASK = 'DELETE_TASK';
+export const SET_LOADING = 'SET_LOADING';
+export const SET_MODAL = 'SET_MODAL';
+export const CLEAR_MODAL = 'CLEAR_MODAL';
