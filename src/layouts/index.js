@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearModal } from '../redux/actions/common';
+import ModalToast from '../common/modals/ModalToast';
 import './index.css';
-
-const ModalToast = React.lazy(() => import('../common/modals/ModalToast'));
 
 function Layout({ children }) {
   const { message } = useSelector((state) => state.common);
@@ -16,9 +15,7 @@ function Layout({ children }) {
         </div>
       </header>
       {children}
-      <React.Suspense fallback={null}>
-        <ModalToast isShow={!!message} message={message} onClose={() => dispatch(clearModal())} />
-      </React.Suspense>
+      <ModalToast isShow={!!message} message={message} onClose={() => dispatch(clearModal())} />
     </React.Fragment>
   );
 }

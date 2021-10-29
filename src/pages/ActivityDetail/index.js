@@ -13,13 +13,12 @@ import {
 } from '../../redux/actions/activities';
 import { setModal, clearModal } from '../../redux/actions/common';
 import { SORT, POPUP } from '../../common/constants/activity';
+import ModalTaskForm from '../../common/modals/ModalTaskForm';
+import ModalDelete from '../../common/modals/ModalDelete';
+import Empty from '../../common/components/Empty';
+import TaskCard from './components/TaskCard';
 import Header from './components/Header';
 import './index.css';
-
-const ModalTaskForm = React.lazy(() => import('../../common/modals/ModalTaskForm'));
-const ModalDelete = React.lazy(() => import('../../common/modals/ModalDelete'));
-const TaskCard = React.lazy(() => import('./components/TaskCard'));
-const Empty = React.lazy(() => import('../../common/components/Empty'));
 
 function ActivityDetail() {
   const params = useParams();
@@ -73,47 +72,42 @@ function ActivityDetail() {
       />
       <div className="row task-row">
         {todos.length === 0 && !loading && (
-          <React.Suspense fallback={null}>
-            <Empty
-              type="list item"
-              onClick={() => dispatch(setModal(POPUP.FORM))}
-              data-cy="todo-empty-state"
-            />
-          </React.Suspense>
+          <Empty
+            type="list item"
+            onClick={() => dispatch(setModal(POPUP.FORM))}
+            data-cy="todo-empty-state"
+          />
         )}
         {todos.length > 0 &&
           todos.map((task) => (
-            <React.Suspense key={task.id} fallback={null}>
-              <TaskCard
-                task={task}
-                onDone={(val) => dispatch(toggleTask({ ...task, is_active: val }))}
-                onEdit={() => dispatch(setModal(POPUP.FORM, task))}
-                onDelete={() => dispatch(setModal(POPUP.DELETE, task))}
-              />
-            </React.Suspense>
+            <TaskCard
+              key={task.id}
+              task={task}
+              onDone={(val) => dispatch(toggleTask({ ...task, is_active: val }))}
+              onEdit={() => dispatch(setModal(POPUP.FORM, task))}
+              onDelete={() => dispatch(setModal(POPUP.DELETE, task))}
+            />
           ))}
       </div>
-      <React.Suspense fallback={null}>
-        <ModalDelete
-          isShow={modal === POPUP.DELETE}
-          isLoading={loading}
-          onClose={() => dispatch(clearModal())}
-          onDelete={() => dispatch(deleteTask(selected.id))}
-          type="list item"
-          title={selected.title}
-        />
-        <ModalTaskForm
-          isShow={modal === POPUP.FORM}
-          isLoading={loading}
-          onClose={() => dispatch(clearModal())}
-          onSave={(task) =>
-            selected.id
-              ? dispatch(editTask(task))
-              : dispatch(addTask({ activity_group_id: params.id, ...task }))
-          }
-          task={selected.id ? selected : null}
-        />
-      </React.Suspense>
+      <ModalDelete
+        isShow={modal === POPUP.DELETE}
+        isLoading={loading}
+        onClose={() => dispatch(clearModal())}
+        onDelete={() => dispatch(deleteTask(selected.id))}
+        type="list item"
+        title={selected.title}
+      />
+      <ModalTaskForm
+        isShow={modal === POPUP.FORM}
+        isLoading={loading}
+        onClose={() => dispatch(clearModal())}
+        onSave={(task) =>
+          selected.id
+            ? dispatch(editTask(task))
+            : dispatch(addTask({ activity_group_id: params.id, ...task }))
+        }
+        task={selected.id ? selected : null}
+      />
     </section>
   );
 }

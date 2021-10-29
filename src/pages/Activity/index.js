@@ -5,12 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addActivity, deleteActivity, fetchActivities } from '../../redux/actions/activities';
 import { setModal, clearModal } from '../../redux/actions/common';
 import { POPUP } from '../../common/constants/activity';
+import ModalDelete from '../../common/modals/ModalDelete';
+import ActivityCard from './components/ActivityCard';
+import Empty from '../../common/components/Empty';
 import Header from './components/Header';
 import './index.css';
-
-const ModalDelete = React.lazy(() => import('../../common/modals/ModalDelete'));
-const ActivityCard = React.lazy(() => import('./components/ActivityCard'));
-const Empty = React.lazy(() => import('../../common/components/Empty'));
 
 function Activity() {
   const history = useHistory();
@@ -27,35 +26,30 @@ function Activity() {
       <Header onAddActivity={() => dispatch(addActivity())} isLoading={loading} />
       <div className="activity-row">
         {activities?.length === 0 && !loading && (
-          <React.Suspense fallback={null}>
-            <Empty
-              type="activity"
-              onClick={() => dispatch(addActivity())}
-              data-cy="activity-empty-state"
-            />
-          </React.Suspense>
+          <Empty
+            type="activity"
+            onClick={() => dispatch(addActivity())}
+            data-cy="activity-empty-state"
+          />
         )}
         {activities?.length > 0 &&
           activities.map((activity) => (
-            <React.Suspense key={activity.id} fallback={null}>
-              <ActivityCard
-                activity={activity}
-                onViewDetail={() => history.push(`/detail/${activity.id}`)}
-                onDelete={() => dispatch(setModal(POPUP.DELETE, activity))}
-              />
-            </React.Suspense>
+            <ActivityCard
+              key={activity.id}
+              activity={activity}
+              onViewDetail={() => history.push(`/detail/${activity.id}`)}
+              onDelete={() => dispatch(setModal(POPUP.DELETE, activity))}
+            />
           ))}
       </div>
-      <React.Suspense fallback={null}>
-        <ModalDelete
-          isShow={modal === POPUP.DELETE}
-          isLoading={loading}
-          onClose={() => dispatch(clearModal())}
-          onDelete={() => dispatch(deleteActivity(selected.id))}
-          type="activity"
-          title={selected.title}
-        />
-      </React.Suspense>
+      <ModalDelete
+        isShow={modal === POPUP.DELETE}
+        isLoading={loading}
+        onClose={() => dispatch(clearModal())}
+        onDelete={() => dispatch(deleteActivity(selected.id))}
+        type="activity"
+        title={selected.title}
+      />
     </section>
   );
 }
