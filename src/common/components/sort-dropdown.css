@@ -44,4 +44,5 @@
 }
 .sort-dropdown__menu .sort-dropdown__item p {
   margin: 0 1rem;
+  color: var(--black);
 }

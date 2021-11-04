@@ -1,3 +1,4 @@
+export const SET_THEME = 'SET_THEME';
 export const SET_ACTIVITIES = 'SET_ACTIVITIES';
 export const ADD_ACTIVITY = 'ADD_ACTIVITY';
 export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';

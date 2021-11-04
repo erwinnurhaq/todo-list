@@ -1,0 +1,41 @@
+.theme-toggle-input[type='checkbox'] {
+  height: 0;
+  width: 0;
+  display: none;
+}
+
+.theme-toggle-label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 60px;
+  height: 30px;
+  background: var(--grey-bg);
+  display: block;
+  border-radius: 30px;
+  position: relative;
+}
+
+.theme-toggle-label:after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background: var(--white);
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.theme-toggle-input:checked + .theme-toggle-label {
+  background: #ffee00;
+}
+
+.theme-toggle-input:checked + .theme-toggle-label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+.theme-toggle-label:active:after {
+  width: 40px;
+}

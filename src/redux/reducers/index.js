@@ -4,12 +4,13 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 
 import activities from './activities';
 import common from './common';
+import theme from './theme';
 
-const rootReducer = combineReducers({ activities, common });
+const rootReducer = combineReducers({ activities, common, theme });
 const config = {
   key: 'root',
   storage,
-  whitelist: ['activities'],
+  whitelist: ['activities', 'theme'],
 };
 
 export default persistReducer(config, rootReducer);
