@@ -17,7 +17,7 @@ button:disabled,
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
-  color: var(--white);
+  color: var(--button-text);
 }
 .common-button p {
   margin: 0;

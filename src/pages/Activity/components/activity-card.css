@@ -15,6 +15,7 @@
 .activity-card .activity-card__content h4 {
   font-size: 18px;
   font-weight: 700;
+  color: var(--black);
 }
 .activity-card .activity-card__footer {
   display: flex;
