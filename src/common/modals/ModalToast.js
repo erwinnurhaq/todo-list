@@ -1,7 +1,6 @@
 import React from 'react';
 import { ReactComponent as InfoIcon } from '../../assets/icons/icon-info.svg';
 import { ReactComponent as AlertIcon } from '../../assets/icons/icon-alert.svg';
-import './modal.css';
 import './modal-toast.css';
 
 const ModalToast = ({ isShow, onClose, message }) => (

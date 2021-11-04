@@ -3,7 +3,6 @@ import { PRIORITY } from '../constants/activity';
 import Button from '../components/Button';
 import Spinner from '../components/Spinner';
 import PriorityDropdown from '../components/PriorityDropdown';
-import './modal.css';
 import './modal-task.css';
 
 const initialForm = { priority: PRIORITY.VERYHIGH, title: '', is_active: 1 };
